@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Podcast — Digital Mirror</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #000000;
+      --teal:       #3ecfcf;
+      --teal-dim:   rgb(13, 181, 181);
+      --teal-faint: rgb(22, 130, 130);
+      --beige:      #e8e4da;
+      --gold:       rgb(221, 168, 33);
+      --dark:       #000000;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--beige);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 0.7px solid rgba(222, 188, 103, 0.505);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 56px;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      letter-spacing: 0.06em;
+      color: rgba(178, 130, 10, 0.944);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.80rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgb(232, 228, 218);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: rgb(221, 168, 33); }
+
+    /* ── PAGE HERO ── */
+    .page-hero {
+      padding: 140px 40px 72px;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .page-eyebrow {
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--teal-dim);
+      opacity: 0.70;
+      margin-bottom: 12px;
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.12;
+      margin-bottom: 16px;
+    }
+
+    .page-title em {
+      font-style: italic;
+      color: var(--teal);
+    }
+
+    .page-subtitle {
+      font-size: 0.88rem;
+      color: rgba(232,228,218,0.45);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── PLAYER BLOCK ── */
+    .player-section {
+      background: #050505;
+      border-top: 1px solid rgba(62, 207, 207, 0.10);
+      border-bottom: 1px solid rgba(62, 207, 207, 0.10);
+      padding: 64px 40px;
+    }
+
+    .player-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    /* Cover art */
+    .cover-col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .cover-art {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(62,207,207,0.15);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.80), 0 0 0 1px rgba(255,255,255,0.03);
+      position: relative;
+      background: #0a0a0a;
+      animation: coverRise 0.9s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    @keyframes coverRise {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .cover-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.88) brightness(0.92);
+    }
+
+    .cover-art-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, transparent 55%, rgba(0,0,0,0.55));
+      pointer-events: none;
+    }
+
+    /* YouTube link */
+    .yt-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      padding: 13px 20px;
+      border: 1.5px solid rgba(62,207,207,0.22);
+      border-radius: 6px;
+      background: rgba(62,207,207,0.04);
+      transition: border-color 0.22s, background 0.22s, box-shadow 0.22s;
+    }
+    .yt-link:hover {
+      border-color: var(--teal);
+      background: rgba(62,207,207,0.08);
+      box-shadow: 0 0 20px rgba(62,207,207,0.18);
+    }
+
+    .yt-icon {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .yt-link-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .yt-link-label {
+      font-size: 0.60rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--teal-dim);
+      opacity: 0.75;
+    }
+
+    .yt-link-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: rgba(232,228,218,0.88);
+      margin-top: 1px;
+    }
+
+    /* Player col */
+    .player-col {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      padding-top: 4px;
+    }
+
+    .episode-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.60rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.25;
+    }
+
+    .episode-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .meta-pill {
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(62,207,207,0.25);
+      color: var(--teal-dim);
+    }
+
+    .meta-duration {
+      font-size: 0.72rem;
+      color: rgba(232,228,218,0.38);
+      letter-spacing: 0.06em;
+    }
+
+    /* Custom audio player */
+    .audio-player {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(62,207,207,0.12);
+      border-radius: 10px;
+      padding: 20px 24px;
+    }
+
+    .audio-player audio {
+      width: 100%;
+      outline: none;
+      filter: invert(1) hue-rotate(170deg) brightness(0.8);
+      accent-color: var(--teal);
+    }
+
+    /* Native audio styled minimally — wrap label */
+    .audio-label {
+      font-size: 0.60rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--teal-dim);
+      opacity: 0.65;
+      margin-bottom: 12px;
+    }
+
+    audio {
+      width: 100%;
+      height: 36px;
+    }
+
+    /* About blurb */
+    .episode-about {
+      font-size: 0.88rem;
+      line-height: 1.78;
+      color: rgba(232,228,218,0.50);
+      max-width: 540px;
+    }
+
+    /* ── HOSTS ── */
+    .hosts-section {
+      padding: 72px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hosts-section::before {
+      content: '';
+      position: absolute;
+      top: 0; right: -8%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(62,207,207,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hosts-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--teal-dim);
+      opacity: 0.70;
+      margin-bottom: 8px;
+    }
+
+    .section-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.80rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 36px;
+      line-height: 1.2;
+    }
+
+    .section-heading em {
+      font-style: italic;
+      color: var(--teal);
+    }
+
+    .hosts-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .host-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(62,207,207,0.10);
+      border-radius: 10px;
+      padding: 22px 20px 20px;
+      transition: border-color 0.22s, background 0.22s;
+    }
+    .host-card:hover {
+      border-color: rgba(62,207,207,0.28);
+      background: rgba(62,207,207,0.04);
+    }
+
+    .host-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .host-bio {
+      font-size: 0.82rem;
+      line-height: 1.68;
+      color: rgba(232,228,218,0.48);
+    }
+
+    /* ── CHAPTERS ── */
+    .chapters-section {
+      background: #050505;
+      border-top: 1px solid rgba(62, 207, 207, 0.10);
+      border-bottom: 1px solid rgba(62, 207, 207, 0.10);
+      padding: 72px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chapters-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -8%;
+      width: 480px; height: 480px;
+      background: radial-gradient(circle, rgba(62,207,207,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .chapters-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .chapters-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 8px;
+    }
+
+    .chapter-item {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 20px;
+      align-items: baseline;
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(232,228,218,0.05);
+      transition: background 0.15s;
+    }
+    .chapter-item:first-child { border-top: 1px solid rgba(232,228,218,0.05); }
+
+    .chapter-time {
+      font-size: 0.70rem;
+      letter-spacing: 0.06em;
+      color: var(--teal-dim);
+      opacity: 0.70;
+      font-variant-numeric: tabular-nums;
+      padding-top: 1px;
+    }
+
+    .chapter-title {
+      font-size: 0.88rem;
+      color: rgba(232,228,218,0.75);
+      line-height: 1.55;
+    }
+
+    .chapter-title strong {
+      display: block;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: rgba(232,228,218,0.92);
+      margin-bottom: 3px;
+    }
+
+    /* ── REFERENCES ── */
+    .refs-section {
+      padding: 72px 40px;
+    }
+
+    .refs-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .refs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .ref-item {
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: rgba(232,228,218,0.42);
+      padding-left: 16px;
+      border-left: 2px solid rgba(62,207,207,0.15);
+    }
+
+    .ref-item em { font-style: italic; color: rgba(232,228,218,0.55); }
+
+    /* ── CONTACT ── */
+    .contact {
+      background: #000000c9;
+      padding: 44px 40px 40px;
+      border-top: 1px solid rgba(62, 207, 207, 0.333);
+    }
+
+    .contact-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .contact-left h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .contact-left p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.77);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .social-links { display: flex; gap: 16px; }
+
+    .social-links a {
+      font-size: 0.70rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--gold);
+      border-bottom: 1px solid rgba(221,168,33,0.35);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .social-links a:hover { color: rgb(240,190,60); border-color: rgb(240,190,60); }
+
+    .contact-meta {
+      margin-top: 18px;
+      font-size: 0.68rem;
+      color: rgba(232,228,218,0.75);
+      line-height: 1.85;
+      letter-spacing: 0.04em;
+    }
+
+    .contact-form { display: flex; flex-direction: column; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    .form-field { display: flex; flex-direction: column; gap: 5px; }
+
+    .form-field label {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--beige);
+    }
+
+    .form-field input,
+    .form-field textarea {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(232,228,218,0.20);
+      padding: 7px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.86rem;
+      color: var(--beige);
+      outline: none;
+      transition: border-color 0.2s;
+      resize: none;
+    }
+    .form-field input:focus,
+    .form-field textarea:focus { border-bottom-color: var(--teal); }
+
+    .form-field.full { margin-bottom: 20px; }
+
+    .form-submit {
+      align-self: flex-end;
+      background: transparent;
+      border: 1.5px solid rgba(163,120,10,0.616);
+      border-radius: 2px;
+      padding: 10px 32px;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      color: #ffffff;
+      position: relative;
+      overflow: hidden;
+      transition: color 0.28s ease, box-shadow 0.28s ease;
+    }
+
+    .form-submit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(172,130,25,0.792);
+      transform: translateX(-100%);
+      transition: transform 0.28s ease;
+      z-index: 0;
+    }
+
+    .form-submit span { position: relative; z-index: 1; }
+
+    .form-submit:hover {
+      color: #000000;
+      box-shadow: 0 0 14px var(--gold);
+    }
+    .form-submit:hover::before { transform: translateX(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      .player-inner { grid-template-columns: 260px 1fr; gap: 40px; }
+      .hosts-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      nav { padding: 0 20px; }
+      .nav-links { gap: 14px; }
+      .nav-links a { font-size: 0.70rem; letter-spacing: 0.06em; }
+      .page-hero { padding: 110px 20px 48px; }
+      .player-section,
+      .hosts-section,
+      .chapters-section,
+      .refs-section { padding: 52px 20px; }
+      .player-inner { grid-template-columns: 1fr; }
+      .cover-col { max-width: 240px; }
+      .hosts-grid { grid-template-columns: 1fr; }
+      .chapter-item { grid-template-columns: 58px 1fr; gap: 14px; }
+      .contact { padding: 36px 20px 32px; }
+      .contact-inner { grid-template-columns: 1fr; gap: 30px; }
+      .form-row { grid-template-columns: 1fr; gap: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Digital Mirror</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="landscape.html">My Landscape</a></li>
+      <li><a href="podcast.html" class="active">The Podcast</a></li>
+
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <p class="page-eyebrow">MODL2250 · Group Project</p>
+    <h1 class="page-title">Same Person,<br><em>Two Platforms.</em></h1>
+    <p class="page-subtitle">Analysing Justin Bieber's digital identity on TikTok vs Instagram</p>
+  </div>
+
+
+  <!-- PLAYER + COVER -->
+  <section class="player-section">
+    <div class="player-inner">
+
+      <!-- Left: cover art + YouTube link -->
+      <div class="cover-col">
+        <div class="cover-art">
+          <img src="us.jpg" alt="Podcast cover — Same Person, Two Platforms" />
+          <div class="cover-art-overlay"></div>
+        </div>
+
+        <a class="yt-link" href="https://youtu.be/3eiDFXdvHLo" target="_blank" rel="noopener noreferrer">
+          <!-- YouTube icon -->
+          <svg class="yt-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="24" height="24" rx="6" fill="#FF0000" opacity="0.90"/>
+            <path d="M19.5 8.2a2 2 0 0 0-1.4-1.4C16.9 6.5 12 6.5 12 6.5s-4.9 0-6.1.3A2 2 0 0 0 4.5 8.2 20.9 20.9 0 0 0 4.2 12a20.9 20.9 0 0 0 .3 3.8 2 2 0 0 0 1.4 1.4c1.2.3 6.1.3 6.1.3s4.9 0 6.1-.3a2 2 0 0 0 1.4-1.4 20.9 20.9 0 0 0 .3-3.8 20.9 20.9 0 0 0-.3-3.8Z" fill="white"/>
+            <path d="M10.2 14.6V9.4l4.4 2.6-4.4 2.6Z" fill="#FF0000"/>
+          </svg>
+          <div class="yt-link-text">
+            <span class="yt-link-label">Also available on</span>
+            <span class="yt-link-name">YouTube →</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Right: metadata + player -->
+      <div class="player-col">
+        <div>
+          <div class="episode-meta">
+            <span class="meta-pill">Media Theory</span>
+            <span class="meta-pill">Semiotics</span>
+            <span class="meta-pill">Interculturalism</span>
+            <span class="meta-duration">17 min 31 sec</span>
+          </div>
+        </div>
+
+        <h2 class="episode-title">Analysing Justin Bieber's Digital Identity on TikTok vs Instagram</h2>
+
+        <p class="episode-about">
+          Have you ever scrolled past the same person on two different apps and thought — wait, is this even the same person? We use Bieber's accounts as a case study to explore how digital identity shifts by platform. Three angles: media theory, semiotics, and interculturalism. What looks like one person managing two accounts turns out to be a more complicated story about algorithms, signs, and whose voice gets heard.
+        </p>
+
+        <div class="audio-player">
+          <p class="audio-label">Listen now</p>
+          <audio controls preload="metadata">
+            <source src="modl2250_group_project.mp3" type="audio/mpeg" />
+            Your browser doesn't support the audio element.
+          </audio>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- HOSTS -->
+  <section class="hosts-section">
+    <div class="hosts-inner">
+      <p class="section-eyebrow">The team</p>
+      <h2 class="section-heading">Who's <em>talking</em></h2>
+      <div class="hosts-grid">
+
+        <div class="host-card">
+          <p class="host-name">Zifan</p>
+          <p class="host-bio">Media and Communications student with a focus on platform studies and digital identity. Leads the episode and anchors the media theory discussion.</p>
+        </div>
+
+        <div class="host-card">
+          <p class="host-name">Iris</p>
+          <p class="host-bio">Specialising in multimodal communication and semiotics. Brings the theoretical backbone to the SKYLRK case study and the platform structure analysis.</p>
+        </div>
+
+        <div class="host-card">
+          <p class="host-name">Jing</p>
+          <p class="host-bio">Background in intercultural communication. Connects the semiotic analysis to real-world platform behaviour and comment section dynamics.</p>
+        </div>
+
+        <div class="host-card">
+          <p class="host-name">Lily</p>
+          <p class="host-bio">Focusing on digital audiences and fan cultures. Grounds the discussion in concrete data from Bieber's actual posts, comment sections, and engagement figures.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- CHAPTERS -->
+  <section class="chapters-section">
+    <div class="chapters-inner">
+      <p class="section-eyebrow">Inside the episode</p>
+      <h2 class="section-heading">Chapter <em>breakdown</em></h2>
+
+      <div class="chapters-list">
+
+        <div class="chapter-item">
+          <span class="chapter-time">00:00</span>
+          <span class="chapter-title">Introduction — the same person, two completely different vibes</span>
+        </div>
+
+        <div class="chapter-item">
+          <span class="chapter-time">01:20</span>
+          <span class="chapter-title">Roadmap — three lenses: media, semiotics, interculturalism</span>
+        </div>
+
+        <div class="chapter-item">
+          <span class="chapter-time">02:30</span>
+          <span class="chapter-title">
+            <strong>Topic 1 — Two platforms, one celebrity</strong>
+            Gee's internal and external grammar; how Instagram's curation culture and TikTok's For You Page produce fundamentally different communication conditions
+          </span>
+        </div>
+
+        <div class="chapter-item">
+          <span class="chapter-time">07:10</span>
+          <span class="chapter-title">Algorithms aren't neutral — Gillespie and Bucher on visibility, and what it means that TikTok sends content to strangers</span>
+        </div>
+
+        <div class="chapter-item">
+          <span class="chapter-time">09:45</span>
+          <span class="chapter-title">
+            <strong>Topic 2 — The SKYLRK case study</strong>
+            Same shoe, same brand, completely different semiotic outcomes on each platform
+          </span>
+        </div>
+
+        <div class="chapter-item">
+          <span class="chapter-time">11:30</span>
+          <span class="chapter-title">TikTok: nine seconds, 3.2 million views, and nobody talking about the shoe</span>
+        </div>
+
+        <div class="chapter-item">
+          <span class="chapter-time">13:00</span>
+          <span class="chapter-title">Instagram: replacing his face with a product image, and why that's a bold semiotic move</span>
+        </div>
+
+        <div class="chapter-item">
+          <span class="chapter-time">15:20</span>
+          <span class="chapter-title">Multimodal coherence — when signs work together vs. against each other</span>
+        </div>
+
+        <div class="chapter-item">
+          <span class="chapter-time">16:10</span>
+          <span class="chapter-title">
+            <strong>Topic 3 — Who's in the comment section?</strong>
+            Light communities, language, and unequal visibility
+          </span>
+        </div>
+
+        <div class="chapter-item">
+          <span class="chapter-time">20:00</span>
+          <span class="chapter-title">The Portugal flag moment, the fishing photo, and Indonesian fans making the space their own</span>
+        </div>
+
+        <div class="chapter-item">
+          <span class="chapter-time">23:30</span>
+          <span class="chapter-title">The Palantir post — fans occupying the same page but having entirely different conversations</span>
+        </div>
+
+        <div class="chapter-item">
+          <span class="chapter-time">26:45</span>
+          <span class="chapter-title">Parasocial relationships and why a fan in Brazil and a fan in the UK may be responding to completely different things</span>
+        </div>
+
+        <div class="chapter-item">
+          <span class="chapter-time">28:20</span>
+          <span class="chapter-title">
+            <strong>Conclusion</strong>
+            Shared space does not mean shared meaning
+          </span>
+        </div>
+
+        <div class="chapter-item">
+          <span class="chapter-time">30:15</span>
+          <span class="chapter-title">Closing question: what is the platform deciding for you, without you noticing?</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- BEHIND THE EPISODE -->
+  <section class="hosts-section">
+    <div class="hosts-inner">
+      <p class="section-eyebrow">How we made it</p>
+      <h2 class="section-heading">Behind the <em>episode</em></h2>
+
+      <!-- Intro pull quote -->
+      <p style="font-size: 1.05rem; line-height: 1.75; color: rgba(232,228,218,0.60); max-width: 640px; margin-bottom: 40px;">
+        We almost made a completely different podcast. Here's what actually happened.
+      </p>
+
+      <!-- Timeline steps -->
+      <div style="display: flex; flex-direction: column; gap: 0;">
+
+        <!-- Step 1 -->
+        <div style="display: grid; grid-template-columns: 40px 1fr; gap: 24px; padding-bottom: 36px; position: relative;">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(62,207,207,0.35); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span style="font-size: 0.72rem; font-weight: 600; color: var(--teal-dim);">01</span>
+            </div>
+            <div style="width: 1px; flex: 1; background: rgba(62,207,207,0.12); margin-top: 8px;"></div>
+          </div>
+          <div style="padding-top: 8px; padding-bottom: 8px;">
+            <p style="font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal-dim); opacity: 0.8; margin-bottom: 8px;">The original idea</p>
+            <p style="font-size: 0.88rem; line-height: 1.78; color: rgba(232,228,218,0.55);">We started somewhere completely different: WeChat. If you haven't heard of it, think WhatsApp — but enormous in China, with over a billion users, built-in payments, and group chats that function like mini marketplaces. Three of us had never used it. So we downloaded it, joined a student secondhand-selling group in Leeds, and spent a few weeks watching how people buy and sell things through a messaging app. It was genuinely fascinating — and a little chaotic. But the more we explored it, the bigger our real question became: <em style="color: rgba(232,228,218,0.80);">why do the same people behave so differently depending on which app they're in?</em></p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div style="display: grid; grid-template-columns: 40px 1fr; gap: 24px; padding-bottom: 36px; position: relative;">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(62,207,207,0.35); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span style="font-size: 0.72rem; font-weight: 600; color: var(--teal-dim);">02</span>
+            </div>
+            <div style="width: 1px; flex: 1; background: rgba(62,207,207,0.12); margin-top: 8px;"></div>
+          </div>
+          <div style="padding-top: 8px; padding-bottom: 8px;">
+            <p style="font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal-dim); opacity: 0.8; margin-bottom: 8px;">The pivot</p>
+            <p style="font-size: 0.88rem; line-height: 1.78; color: rgba(232,228,218,0.55);">We wrote a full first script about WeChat: emojis, visual communication, how a winking face means something completely different to a 20-year-old in Shanghai than to a 50-year-old in Leeds. But something kept nagging at us. WeChat was interesting — but it was also quite niche. We wanted a case study that anyone could look up and check for themselves. That's when we turned to Instagram and TikTok. Specifically: what happens when the same person runs accounts on two platforms that work in completely opposite ways? Justin Bieber had 52 TikTok posts across five years and 293 million Instagram followers. The contrast was already there. We just had to read it carefully.</p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div style="display: grid; grid-template-columns: 40px 1fr; gap: 24px; padding-bottom: 36px; position: relative;">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(62,207,207,0.35); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span style="font-size: 0.72rem; font-weight: 600; color: var(--teal-dim);">03</span>
+            </div>
+            <div style="width: 1px; flex: 1; background: rgba(62,207,207,0.12); margin-top: 8px;"></div>
+          </div>
+          <div style="padding-top: 8px; padding-bottom: 8px;">
+            <p style="font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal-dim); opacity: 0.8; margin-bottom: 8px;">The research</p>
+            <p style="font-size: 0.88rem; line-height: 1.78; color: rgba(232,228,218,0.55);">We went through his TikTok post by post — all 52 of them, from 2020 to the last one in late 2025. We tracked the SKYLRK shoe campaign across both platforms. We read comment sections: the Coachella posts, a photo of him teaching his son to fish, a post that got tangled up with a political controversy. What we found surprised us. The same fans, looking at the same person, were having completely different conversations depending on which platform they were on — and depending on where in the world they were posting from. A fan in Brazil, a fan in Indonesia, a fan in the UK: same page, different worlds.</p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div style="display: grid; grid-template-columns: 40px 1fr; gap: 24px;">
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(62,207,207,0.35); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span style="font-size: 0.72rem; font-weight: 600; color: var(--teal-dim);">04</span>
+            </div>
+          </div>
+          <div style="padding-top: 8px;">
+            <p style="font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal-dim); opacity: 0.8; margin-bottom: 8px;">Recording &amp; editing</p>
+            <p style="font-size: 0.88rem; line-height: 1.78; color: rgba(232,228,218,0.55);">We recorded in one session. The original cut was nearly 25 minutes — we trimmed it to 17, cutting a whole section on Bieber's YouTube account (interesting, but it muddied the argument) and a fourth topic we had researched but couldn't land cleanly in the time. The best moments in the episode weren't planned: reactions to things we had found in the data that still surprised us even after weeks of looking at them. That's probably the honest answer to how this podcast got made — we followed a question until it got genuinely interesting, and then tried to share what we found.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- REFERENCES -->
+  <section class="refs-section">
+    <div class="refs-inner">
+      <p class="section-eyebrow">Academic sources</p>
+      <h2 class="section-heading">Key <em>references</em></h2>
+
+      <div class="refs-list">
+        <p class="ref-item">Adami, E. (2017). Multimodality. In García, Flores &amp; Spotti (Eds.), <em>The Oxford Handbook of Language and Society</em>. Oxford University Press.</p>
+        <p class="ref-item">Blommaert, J. &amp; Varis, P. (2015). Enoughness, accent and light communities. <em>Tilburg Papers in Culture Studies</em>, 139.</p>
+        <p class="ref-item">Bucher, T. (2012). Want to be on the top? Algorithmic power and the threat of invisibility on Facebook. <em>New Media &amp; Society</em>, 14(7).</p>
+        <p class="ref-item">Gee, J. P. (2005). Semiotic social spaces and affinity spaces. In Barton &amp; Tusting (Eds.), <em>Beyond Communities of Practice</em>. Cambridge University Press.</p>
+        <p class="ref-item">Gillespie, T. (2014). The relevance of algorithms. In <em>Media Technologies</em>. MIT Press.</p>
+        <p class="ref-item">Horton, D. &amp; Wohl, R. R. (1956). Mass communication and para-social interaction. <em>Psychiatry</em>, 19(3).</p>
+        <p class="ref-item">Kress, G. &amp; van Leeuwen, T. (2001). <em>Multimodal Discourse</em>. Arnold.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="contact-inner">
+
+      <div class="contact-left">
+        <h2>Contact</h2>
+        <div class="social-links">
+          <a href="mailto:hxdm6984@leeds.ac.uk">Email me</a>
+        </div>
+        <div class="contact-meta">
+          <p>Student Project</p>
+          <p>University of Leeds, 2026</p>
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" />
+          </div>
+          <div class="form-field">
+            <label for="email">Email *</label>
+            <input type="email" id="email" />
+          </div>
+        </div>
+        <div class="form-field full">
+          <label for="message">Leave a message</label>
+          <textarea id="message" rows="3"></textarea>
+        </div>
+        <button class="form-submit" type="button"><span>Submit</span></button>
+      </div>
+
+    </div>
+  </section>
+
+
+</body>
+</html>
