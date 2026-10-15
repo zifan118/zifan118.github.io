@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue:    #3B82F6;
+      --blue-lt: #7EB3FF;
+      --bg:      #0A0A0A;
+      --text:    #F0EDE8;
+      --muted:   #999;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 0.7px solid rgba(222,188,103,0.505);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 56px;
+    }
+    nav .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      letter-spacing: 0.06em;
+      color: rgba(178,130,10,0.944);
+      text-decoration: none;
+    }
+    nav ul { list-style: none; display: flex; gap: 2.25rem; }
+    nav ul a {
+      color: rgb(232,228,218); font-size: 0.80rem; text-decoration: none;
+      letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: rgb(221,168,33); }
+    nav ul a.active { color: rgb(221,168,33); }
+
+    .log-inner {
+      max-width: 720px; margin: 0 auto;
+      padding: 6rem 2.5rem 6rem;
+    }
+    .log-back {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); cursor: pointer; margin-bottom: 3rem;
+      background: none; border: none; text-decoration: none;
+      transition: color 0.2s;
+    }
+    .log-back:hover { color: var(--text); }
+    .log-meta {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .log-meta .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .log-meta .num { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+    .log-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      line-height: 1.15; margin-bottom: 1rem;
+    }
+    .log-subtitle {
+      font-size: 1rem; color: var(--muted);
+      line-height: 1.7; margin-bottom: 2.5rem;
+      border-left: 2px solid rgba(255,255,255,0.12);
+      padding-left: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">Digital Mirror</a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="landscape.html" class="active">My Landscape</a></li>
+    <li><a href="podcast.html">The Podcast</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+
+<title>Log 03 — Content Creator — Digital Mirror</title>
+
+<div style="display:block">
+<div class="log-inner">
+  <a class="log-back" href="landscape.html" style="color:rgb(187,140,23)">← Go Back</a>
+  <div class="log-meta">
+    <div class="dot" style="background:#3B82F6"></div>
+    <span class="num">Log 03 · Content Creator</span>
+    <span style="font-size:0.75rem; color:#3B82F6; opacity:0.7; letter-spacing:0.08em; font-weight:300;">· 750 words · 4 min read</span>
+  </div>
+  <h1 class="log-title">Is This Him, or the Old Him?</h1>
+  <p class="log-subtitle">I opened Justin Bieber's TikTok expecting to find a superstar. What I found instead was an archive with a gap in it.</p>
+  <p style="font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:rgba(59,130,246,0.6); margin-bottom:2rem;">✦ Click the highlighted terms to explore the theory behind them</p>
+
+  <style>
+    /* ── ARTICLE BODY ── */
+    .log3-body { line-height:1.85; color:#E8E4DA; }
+    .log3-body p { margin-bottom:1.5rem; font-size:1rem; }
+    .log3-body h2 {
+      font-family:'DM Serif Display',serif;
+      font-size:1.3rem; margin:2.8rem 0 1rem;
+      color:#3B82F6; letter-spacing:0.01em;
+    }
+
+    /* highlighted keyword */
+    .kw {
+      background: rgba(59,130,246,0.15);
+      color: #7EB3FF;
+      border-bottom: 1px solid rgba(59,130,246,0.5);
+      border-radius: 3px;
+      padding: 1px 4px;
+      cursor: pointer;
+      font-style: normal;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .kw:hover { background: rgba(59,130,246,0.28); }
+
+    /* concept card overlay */
+    .kcard-overlay {
+      display: none;
+      position: fixed; inset:0; z-index:500;
+      background: rgba(0,0,0,0.65);
+      align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+    .kcard-overlay.open { display:flex; }
+    .kcard {
+      background: #161616;
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 14px;
+      padding: 1.8rem 2rem;
+      max-width: 420px; width:100%;
+      position: relative;
+    }
+    .kcard-concept {
+      font-size:0.65rem; letter-spacing:0.18em; text-transform:uppercase;
+      color:#3B82F6; margin-bottom:0.5rem; display:block;
+    }
+    .kcard-title {
+      font-family:'DM Serif Display',serif;
+      font-size:1.3rem; color:#F0EDE8;
+      margin-bottom:1rem; line-height:1.2;
+    }
+    .kcard-body {
+      font-size:0.88rem; color:#b0aca5; line-height:1.7;
+      margin-bottom:1.2rem;
+    }
+    .kcard-cite {
+      font-size:0.78rem; color:#666;
+      border-top:1px solid rgba(255,255,255,0.07);
+      padding-top:0.9rem; margin-top:0.2rem;
+    }
+    .kcard-cite a {
+      color:#3B82F6; text-decoration:none;
+      border-bottom:1px dotted rgba(59,130,246,0.4);
+    }
+    .kcard-cite a:hover { border-color:#3B82F6; }
+    .kcard-close {
+      position:absolute; top:14px; right:16px;
+      background:none; border:none; color:#666;
+      font-size:1.1rem; cursor:pointer; line-height:1;
+      transition: color 0.2s;
+    }
+    .kcard-close:hover { color:#F0EDE8; }
+
+    /* pull quote */
+    .log3-pull {
+      border-left:3px solid #3B82F6;
+      padding:0.8rem 1.5rem;
+      margin:2rem 0;
+      font-family:'DM Serif Display',serif;
+      font-size:1.1rem; line-height:1.6;
+      color:#7EB3FF; font-style:italic;
+    }
+
+    /* stat box */
+    .stat-box {
+      background: rgba(59,130,246,0.06);
+      border: 1px solid rgba(59,130,246,0.18);
+      border-radius: 10px;
+      padding: 1.4rem 1.8rem;
+      margin: 2rem 0;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .stat-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.4rem;
+      color: #3B82F6;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: #999;
+      line-height: 1.6;
+    }
+
+    /* ref list */
+    .log3-refs {
+      margin-top:3.5rem;
+      padding-top:1.5rem;
+      border-top:1px solid rgba(255,255,255,0.07);
+    }
+    .log3-refs h4 {
+      font-size:0.68rem; letter-spacing:0.16em;
+      text-transform:uppercase; color:#555; margin-bottom:1rem;
+    }
+    .log3-refs li {
+      font-size:0.8rem; color:#666; line-height:1.7;
+      margin-bottom:0.5rem; list-style:none;
+      padding-left:1.2em;
+    }
+    .log3-refs a {
+      color:#666; text-decoration:none;
+      border-bottom:1px dotted rgba(59,130,246,0.3);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .log3-refs a:hover {
+      color:#7EB3FF;
+      border-color:rgba(59,130,246,0.7);
+    }
+
+    /* ── SCREENSHOT STYLES ── */
+    .ss-row {
+      display: flex;
+      gap: 1.4rem;
+      align-items: flex-start;
+      margin: 1.8rem 0 2rem;
+    }
+    .ss-window { flex: 0 0 auto; }
+    .ss-scroll-hint {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(59,130,246,0.7);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    /* Fixed-height scrollable phone for posts grid */
+    .ss-scroll {
+      width: 168px;
+      height: 360px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      border-radius: 12px;
+      border: 1px solid rgba(59,130,246,0.25);
+      background: #111;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(59,130,246,0.4) transparent;
+    }
+    .ss-scroll::-webkit-scrollbar { width: 3px; }
+    .ss-scroll::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.4); border-radius: 2px; }
+    .ss-scroll img { width: 100%; display: block; }
+    /* Static profile screenshot — same width, natural height */
+    .ss-static {
+      width: 168px;
+      border-radius: 12px;
+      border: 1px solid rgba(59,130,246,0.25);
+      display: block;
+      object-fit: cover;
+    }
+    .ss-caption {
+      font-size: 0.68rem;
+      color: #555;
+      margin-top: 0.45rem;
+      line-height: 1.4;
+      font-style: italic;
+      width: 168px;
+    }
+    /* Text beside images */
+    .ss-aside {
+      flex: 1;
+      min-width: 0;
+      font-size: 1rem;
+      line-height: 1.85;
+      color: #E8E4DA;
+    }
+    .ss-aside p { margin-bottom: 1.2rem; }
+    .ss-aside p:last-child { margin-bottom: 0; }
+  </style>
+
+  <article class="log3-body">
+
+    <!-- PROFILE IMAGE beside opening paragraphs -->
+    <div class="ss-row">
+      <div class="ss-window">
+        <img class="ss-static" src="B_file.jpg" alt="Justin Bieber's TikTok profile — 31M followers, labelled Artist" />
+        <p class="ss-caption">@justinbieber · 31M followers · labelled Artist</p>
+      </div>
+      <div class="ss-aside">
+        <p>Fifty-two posts across five years, and then nothing. The most recent one is from 2022. No farewell post, no explanation, no pinned message. Just a trailing off. One post, then fewer posts, then silence. If you didn't already know who he was, the account wouldn't tell you much. It's not a profile that performs celebrity. It's more like a room someone left in a hurry.</p>
+        <div class="stat-box" style="margin:0;">
+          <div class="stat-num">52</div>
+          <div class="stat-label">posts published across five years. The last one is from 2022. Nothing since.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POSTS GRID as scrollable phone beside "scrolling" paragraph -->
+    <div class="ss-row">
+      <div class="ss-window">
+        <p class="ss-scroll-hint">↕ scroll to explore</p>
+        <div class="ss-scroll">
+          <img src="B_posts.jpg" alt="Justin Bieber's full TikTok post grid — 52 videos" />
+        </div>
+        <p class="ss-caption">All 52 posts — the whole archive in one scroll</p>
+      </div>
+      <div class="ss-aside">
+        <p>I kept scrolling back through it, trying to find the shape of it. The early posts have a particular energy. Short clips, casual framing, the kind of content that looks effortless because someone made it look that way. But even then, the rhythm was never consistent. Gaps of weeks, sometimes months. Occasionally a burst of three or four posts close together, and then nothing again.</p>
+        <p>Fifty-two posts is not nothing. But spread across five years on a platform that lives and dies by daily posting, it feels like almost nothing.</p>
+      </div>
+    </div>
+
+    <h2>This is not how TikTok is supposed to work</h2>
+
+    <p><span class="kw" onclick="openCard('platform-affordances')">The platform rewards people who show up regularly, who train their audience to expect them.</span> If you stop, the feed moves on without you. A creator who posts fifty-two times in five years is not really playing by those rules. They're just visiting occasionally.</p>
+
+    <p>For someone like Bieber, that probably doesn't matter. He doesn't need TikTok to know who he is. His whole identity as a celebrity exists outside the platform, in his music, in his history, in the way he's been talked about in media since he was a teenager. <span class="kw" onclick="openCard('polymedia')">TikTok is just one more surface he passes through, not a place he actually lives.</span></p>
+
+    <p>But that's what made the account strange to look at. Because TikTok, more than almost any other platform, is built on the feeling of closeness. When it works, you feel like you're <em>seeing</em> someone rather than watching them. <span class="kw" onclick="openCard('parasocial')">Bieber's posts don't quite give you that.</span> They're polished in a way that quietly keeps you at arm's length. You can see him. You can't really reach him.</p>
+
+    <div class="log3-pull">
+      You can see him. You can't really reach him.
+    </div>
+
+    <h2>So I read the comments</h2>
+
+    <p>I did what you always end up doing when the account itself doesn't say enough. I read the comments.</p>
+
+    <p>The comments are their own document entirely. Most of them aren't really about the posts at all. They're addressed directly to him, as if the video is just a way of getting his attention. <em>Miss you. Come back. We're still here.</em> There are long threads of fans updating each other on things he's said in interviews, or how he looked at an airport, or whether the rumours are true. The comment section has become the place where the story continues, even though the account stopped telling it.</p>
+
+    <p>He doesn't need to post for his presence to be felt there. <span class="kw" onclick="openCard('participatory')">The fans maintain it for him.</span> They archive, they share, they keep the conversation going. The account has essentially been handed over, not officially, not deliberately, but in practice. It belongs to its audience now more than it belongs to him.</p>
+
+    <h2>Once something is public, you lose a certain control</h2>
+
+    <p><span class="kw" onclick="openCard('context-collapse')">Once something is posted publicly, you lose a certain kind of control over what it means.</span> You can delete posts, you can go silent, but you can't take back the relationship your audience has already built with your image. Bieber's TikTok is a good example of that. The account is quiet, but the conversation around it isn't.</p>
+
+    <p>Maybe that's why he stopped. Not because TikTok failed him, but because the whole thing it asks of you — <span class="kw" onclick="openCard('presentation-of-self')">showing up, being seen, performing a version of yourself that feels real</span> — gets harder the longer you've been famous. The closeness the platform promises is the same thing that's been taken from him since he was fourteen. Perhaps fifty-two posts isn't abandonment. Perhaps it's a decision.</p>
+
+    <p>I came to his profile looking for a superstar and found a quiet account. I went to the comments looking for information and found a community that had decided the space still mattered, even if he'd moved on.</p>
+
+    <p>That gap between what a profile shows and what its audience makes of it. That's the thing I keep coming back to.</p>
+
+  </article>
+
+  <div class="log3-refs">
+    <h4>References</h4>
+    <ul>
+      <li><a href="https://www.tandfonline.com/doi/full/10.1080/1369118X.2021.2021661" target="_blank" rel="noopener">Jones, R. and Hafner, C. A. (2021). Social (and 'anti-social') media. In <em>Understanding Digital Literacies: A Practical Introduction</em> (2nd ed.). Routledge. pp. 205–225.</a></li>
+      <li><a href="https://journals.sagepub.com/doi/10.1177/2056305115578675" target="_blank" rel="noopener">Madianou, M. (2015). Polymedia and Ethnography: Understanding the Social in Social Media. <em>Social Media + Society</em>, Apr–Jun: 1–3.</a></li>
+      <li><a href="https://doi.org/10.1016/j.dcm.2026.100977" target="_blank" rel="noopener">Adami, E. (2026). Multimodal time–space-interaction analysis of content creators' translocal trajectories. <em>Discourse, Context &amp; Media</em>, 70, 100977.</a></li>
+    </ul>
+  </div>
+
+  <!-- PREV / NEXT NAV -->
+  <style>
+    .log-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2.5rem;
+      margin-bottom: 0;
+    }
+    .nav-link {
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      color: #555;
+      text-decoration: none;
+      transition: color 0.2s;
+      line-height: 1.5;
+    }
+    .nav-link:hover { color: #F0EDE8; }
+  </style>
+
+  <div class="log-nav">
+    <a class="nav-link" href="log2.html">← Log 02 · Platform Grammar</a>
+    <a class="nav-link" href="log4.html">Log 04 · A Moment of 'Cross Culture' →</a>
+  </div>
+
+  <!-- ENGAGEMENT BAR -->
+  <style>
+    .log-engagement {
+      margin-top: 3rem;
+      padding-top: 1.8rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+    }
+    .eng-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #888;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .eng-btn:hover { color: #3B82F6; }
+    .eng-btn.liked { color: #3B82F6; }
+    .eng-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .eng-divider {
+      width: 1px; height: 16px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Comments */
+    .log-comments { margin-top: 2.5rem; }
+    .log-comments h4 {
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #C8C4BE;
+      margin-bottom: 0.6rem;
+    }
+    .comment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      margin-bottom: 0.8rem;
+    }
+    .comment-item {
+      display: flex;
+      gap: 0.9rem;
+      align-items: flex-start;
+    }
+    .comment-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: rgba(59,130,246,0.15);
+      border: 1px solid rgba(59,130,246,0.2);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: #3B82F6;
+      font-weight: 500;
+    }
+    .comment-body { flex: 1; }
+    .comment-name {
+      font-size: 0.75rem;
+      color: #3B82F6;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      letter-spacing: 0.03em;
+    }
+    .comment-text {
+      font-size: 0.88rem;
+      color: #aaa;
+      line-height: 1.6;
+    }
+    .comment-form {
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+      margin-top: 0.5rem;
+    }
+    .comment-input {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: #E8E4DA;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s;
+      min-height: 42px;
+    }
+    .comment-input::placeholder { color: #555; }
+    .comment-input:focus { border-color: rgba(59,130,246,0.35); }
+    .comment-submit {
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.25);
+      border-radius: 8px;
+      padding: 0.6rem 1.1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      color: #3B82F6;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      transition: background 0.2s, border-color 0.2s;
+      white-space: nowrap;
+      align-self: flex-end;
+    }
+    .comment-submit:hover {
+      background: rgba(59,130,246,0.18);
+      border-color: rgba(59,130,246,0.45);
+    }
+  </style>
+
+  <div class="log-engagement">
+    <button class="eng-btn" id="like-btn" onclick="toggleLike()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      <span id="like-count">1</span>
+    </button>
+    <div class="eng-divider"></div>
+    <span class="eng-btn" style="cursor:default;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+      </svg>
+      <span>21 views</span>
+    </span>
+    <div class="eng-divider"></div>
+    <span class="eng-btn" style="cursor:default;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <span id="comment-count">0</span>
+    </span>
+  </div>
+
+  <div class="log-comments">
+    <h4>Comments</h4>
+    <div class="comment-list" id="comment-list"></div>
+  </div>
+  <div class="comment-form">
+    <textarea class="comment-input" id="comment-input" placeholder="Leave a comment…" rows="1"
+      oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'"></textarea>
+    <button class="comment-submit" onclick="postComment()">Post</button>
+  </div>
+
+  <script>
+    // Like toggle
+    var liked = false;
+    var likeCount = 1;
+    function toggleLike() {
+      liked = !liked;
+      likeCount += liked ? 1 : -1;
+      var btn = document.getElementById('like-btn');
+      var svg = btn.querySelector('svg path');
+      btn.classList.toggle('liked', liked);
+      svg.setAttribute('fill', liked ? '#3B82F6' : 'none');
+      document.getElementById('like-count').textContent = likeCount;
+    }
+
+    // Post comment
+    function postComment() {
+      var input = document.getElementById('comment-input');
+      var text = input.value.trim();
+      if (!text) return;
+      var list = document.getElementById('comment-list');
+      var item = document.createElement('div');
+      item.className = 'comment-item';
+      item.innerHTML =
+        '<div class="comment-avatar">You</div>' +
+        '<div class="comment-body">' +
+          '<p class="comment-name">You</p>' +
+          '<p class="comment-text">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p>' +
+        '</div>';
+      list.appendChild(item);
+      input.value = '';
+      input.style.height = 'auto';
+      var count = document.getElementById('comment-count');
+      count.textContent = parseInt(count.textContent) + 1;
+    }
+  </script>
+
+</div>
+</div>
+
+<!-- CONCEPT CARD OVERLAY -->
+<div class="kcard-overlay" id="kcard-overlay" onclick="closeCard(event)">
+  <div class="kcard" id="kcard-box">
+    <button class="kcard-close" onclick="closeCard()">×</button>
+    <span class="kcard-concept" id="kc-concept"></span>
+    <p class="kcard-title" id="kc-title"></p>
+    <p class="kcard-body" id="kc-body"></p>
+    <div class="kcard-cite" id="kc-cite"></div>
+  </div>
+</div>
+
+<script>
+  var cardData = {
+    'platform-affordances': {
+      concept: 'Platform Design',
+      title: 'How TikTok is designed to reward you — or forget you',
+      body: 'Every platform has its own built-in rules about what it allows, encourages, and punishes — not through written policies, but through design. TikTok\'s algorithm prioritises content that quickly captures attention, which means it actively rewards creators who show up consistently and penalises those who don\'t. Posting infrequently isn\'t neutral. The platform moves on, your reach quietly shrinks, and the audience you built starts to erode.',
+      cite: 'Jones, R. and Hafner, C. A. (2021). Social (and \'anti-social\') media. In <em>Understanding Digital Literacies</em> (2nd ed.). Routledge. pp. 205–225. / Adami, E. (2026). Multimodal time–space-interaction analysis of content creators\' translocal trajectories. <em>Discourse, Context &amp; Media</em>, 70, 100977.'
+    },
+    'polymedia': {
+      concept: 'Media Theory',
+      title: 'Why nobody really lives on just one platform',
+      body: 'We don\'t choose platforms at random. Each one carries its own social weight — what it\'s for, who uses it, what kind of presence it asks of you. Researchers call this polymedia: the idea that people navigate a whole environment of platforms rather than using just one, and that the choice of platform itself becomes meaningful. Bieber doesn\'t live on TikTok the way a creator does. He passes through it.',
+      cite: 'Madianou, M. (2015). Polymedia and Ethnography: Understanding the Social in Social Media. <em>Social Media + Society</em>, Apr–Jun: 1–3. <a href="https://journals.sagepub.com/doi/10.1177/2056305115578675" target="_blank">View source →</a>'
+    },
+    'parasocial': {
+      concept: 'Audience & Fandom',
+      title: 'Why you feel like you know someone you\'ve never met',
+      body: 'There\'s a specific kind of relationship that media creates — one where you feel genuine warmth, familiarity, even loyalty towards someone who has no idea you exist. Researchers call this parasocial interaction. TikTok is especially good at producing it, because the format — direct-to-camera, low production, seemingly unfiltered — mimics the feeling of a real conversation. Bieber\'s account, polished and infrequent, never quite closes that distance. Which is why the comments feel so much more personal than the posts.',
+      cite: 'Jones, R. and Hafner, C. A. (2021). Social (and \'anti-social\') media. In <em>Understanding Digital Literacies</em> (2nd ed.). Routledge. pp. 205–225.'
+    },
+    'participatory': {
+      concept: 'Online Audiences',
+      title: 'When the audience takes over',
+      body: 'Audiences online aren\'t passive. They don\'t just watch — they archive, discuss, update, and keep spaces alive long after a creator has moved on. Researchers studying content creators have found that the comment section often becomes its own community, running independently of whoever the account belongs to. Bieber\'s TikTok is a clear example: the account is quiet, but the conversation isn\'t. His fans have effectively taken over the space.',
+      cite: 'Jones, R. and Hafner, C. A. (2021). Social (and \'anti-social\') media. In <em>Understanding Digital Literacies</em> (2nd ed.). Routledge. pp. 205–225. / Adami, E. (2026). <em>Discourse, Context &amp; Media</em>, 70, 100977.'
+    },
+    'context-collapse': {
+      concept: 'Social Media Theory',
+      title: 'Once it\'s public, it belongs to everyone',
+      body: 'When you post something publicly, you\'re really posting to multiple audiences at once — fans, critics, journalists, strangers, people from completely different contexts — whether you intended to or not. Researchers call this context collapse. What you meant to say to one group reaches a much wider, messier crowd. And once that\'s happened, you can delete the post, you can go quiet, but you can\'t take back the relationship people have already built with your image.',
+      cite: 'Jones, R. and Hafner, C. A. (2021). Social (and \'anti-social\') media. In <em>Understanding Digital Literacies</em> (2nd ed.). Routledge. pp. 205–225.'
+    },
+    'presentation-of-self': {
+      concept: 'Identity Online',
+      title: 'The performance behind every post',
+      body: 'The sociologist Erving Goffman once described social life as a kind of performance — we all choose what to show, what to hide, which version of ourselves to put forward for which audience. Social media makes that performance more conscious and more constant. For most creators, this is the job: deciding what to reveal, how casual to seem, how much effort to make look effortless. The longer someone has been famous, the harder it becomes to find a version of yourself that still feels genuine.',
+      cite: 'Jones, R. and Hafner, C. A. (2021). Social (and \'anti-social\') media. In <em>Understanding Digital Literacies</em> (2nd ed.). Routledge. pp. 205–225.'
+    }
+  };
+
+  function openCard(id) {
+    var d = cardData[id];
+    if (!d) return;
+    document.getElementById('kc-concept').textContent = d.concept;
+    document.getElementById('kc-title').textContent = d.title;
+    document.getElementById('kc-body').textContent = d.body;
+    document.getElementById('kc-cite').innerHTML = d.cite;
+    document.getElementById('kcard-overlay').classList.add('open');
+  }
+  function closeCard(e) {
+    if (e && e.target !== document.getElementById('kcard-overlay')) return;
+    document.getElementById('kcard-overlay').classList.remove('open');
+  }
+</script>
+
+<!-- BACK TO TOP -->
+<style>
+  .back-top {
+    position: fixed;
+    right: 2.2rem; bottom: 2.2rem;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.25);
+    color: #3B82F6;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s, background 0.2s, border-color 0.2s;
+    z-index: 200;
+  }
+  .back-top.visible { opacity: 1; pointer-events: auto; }
+  .back-top:hover {
+    background: rgba(59,130,246,0.18);
+    border-color: rgba(59,130,246,0.5);
+  }
+  .back-top svg { width: 16px; height: 16px; }
+</style>
+
+<button class="back-top" id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+
+<script>
+  var backTop = document.getElementById('back-top');
+  window.addEventListener('scroll', function() {
+    backTop.classList.toggle('visible', window.scrollY > 300);
+  });
+</script>
+
+</body>
+</html>
