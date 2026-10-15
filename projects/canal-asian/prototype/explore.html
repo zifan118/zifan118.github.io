@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Explore — Canal+ Asian</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+
+        /* =====================
+           RESET / BASE
+        ===================== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        .explore-page {
+            min-height: 100vh;
+            background: #000;
+            overflow-x: hidden;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        /* =====================
+           INTRO QUESTION SCREEN
+           "What do you feel like tonight?"
+        ===================== */
+        .mood-screen {
+            margin-left: 210px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 72px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ambient background blobs */
+        .mood-screen::before {
+            content: "";
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(221,48,78,0.08) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            pointer-events: none;
+        }
+
+        .mood-screen::after {
+            content: "";
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(100,60,200,0.06) 0%, transparent 70%);
+            bottom: 0;
+            left: 200px;
+            pointer-events: none;
+        }
+
+        .mood-eyebrow {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.25);
+            margin-bottom: 20px;
+            animation: fadeUp 0.8s ease both;
+        }
+
+        .mood-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(42px, 5.5vw, 80px);
+            font-weight: 900;
+            line-height: 1.05;
+            color: white;
+            margin-bottom: 48px;
+            animation: fadeUp 0.8s 0.1s ease both;
+        }
+
+        .mood-heading em {
+            font-style: italic;
+            color: #DD304E;
+        }
+
+        /* mood buttons — the real differentiator */
+        .mood-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            max-width: 820px;
+            animation: fadeUp 0.8s 0.2s ease both;
+        }
+
+        .mood-btn {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 22px 24px;
+            cursor: pointer;
+            transition: all 0.28s cubic-bezier(.25,.8,.25,1);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mood-btn::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.28s;
+            border-radius: 14px;
+        }
+
+        .mood-btn:hover {
+            border-color: rgba(255,255,255,0.18);
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.07);
+        }
+
+        .mood-btn:hover::before { opacity: 1; }
+
+        .mood-btn.active {
+            border-color: #DD304E;
+            background: rgba(221,48,78,0.08);
+        }
+
+        .mood-emoji {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 10px;
+            transition: transform 0.3s;
+        }
+
+        .mood-btn:hover .mood-emoji {
+            transform: scale(1.2);
+        }
+
+        .mood-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .mood-sub {
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+            line-height: 1.5;
+        }
+
+        .mood-footer {
+            margin-top: 36px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.2);
+            animation: fadeUp 0.8s 0.35s ease both;
+        }
+
+        .mood-footer span {
+            color: rgba(255,255,255,0.45);
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        /* =====================
+           RESULTS SCREEN
+        ===================== */
+        .results-screen {
+            display: none;
+            margin-left: 210px;
+            padding: 0 0 80px;
+        }
+
+        .results-screen.visible { display: block; }
+
+        /* full-bleed featured show — takes entire viewport */
+        .feature-card {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .feature-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 15%;
+            transition: transform 6s ease;
+        }
+
+        .feature-card:hover .feature-img {
+            transform: scale(1.03);
+        }
+
+        /* cinematic gradient */
+        .feature-grad {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%),
+                linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 45%);
+        }
+
+        /* red accent line on left edge */
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 15%;
+            bottom: 15%;
+            width: 3px;
+            background: #DD304E;
+            z-index: 5;
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.6s cubic-bezier(.25,.8,.25,1);
+        }
+
+        .feature-card:hover::before { transform: scaleY(1); }
+
+        .feature-content {
+            position: absolute;
+            bottom: 90px;
+            left: 64px;
+            z-index: 10;
+            max-width: 520px;
+        }
+
+        /* "if you feel like..." tag */
+        .feature-mood-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #DD304E;
+            margin-bottom: 14px;
+            background: rgba(221,48,78,0.1);
+            border: 1px solid rgba(221,48,78,0.25);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        .feature-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(36px, 4.5vw, 62px);
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .feature-meta {
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .fmeta-sep { opacity: 0.25; }
+
+        .feature-hook {
+            font-size: 16px;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.72;
+            margin-bottom: 28px;
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* cultural insight line */
+        .feature-insight {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 26px;
+            padding: 12px 16px;
+            background: rgba(0,0,0,0.5);
+            border-left: 2px solid #DD304E;
+            border-radius: 0 8px 8px 0;
+            backdrop-filter: blur(8px);
+            max-width: 440px;
+        }
+
+        .insight-label {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #DD304E;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .insight-text {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.6;
+        }
+
+        .feature-actions { display: flex; gap: 10px; }
+
+        .btn-watch {
+            background: white;
+            color: #000;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s, transform 0.15s;
+        }
+
+        .btn-watch:hover { background: rgba(255,255,255,0.85); transform: translateY(-1px); }
+
+        .btn-more {
+            background: rgba(255,255,255,0.08);
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px 24px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: background 0.2s;
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-more:hover { background: rgba(255,255,255,0.15); }
+
+        /* number badge — shows rank / order */
+        .feature-num {
+            position: absolute;
+            top: 40px;
+            right: 56px;
+            font-family: 'Playfair Display', serif;
+            font-size: 140px;
+            font-weight: 900;
+            color: rgba(255,255,255,0.04);
+            line-height: 1;
+            z-index: 2;
+            user-select: none;
+        }
+
+        /* =====================
+           SECONDARY ROW — smaller stacked cards
+        ===================== */
+        .secondary-row {
+            background: #000;
+            padding: 48px 64px;
+        }
+
+        .sec-head {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .sec-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .sec-sub {
+            font-size: 12px;
+            color: rgba(255,255,255,0.25);
+        }
+
+        .sec-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .sec-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .sec-card:hover {
+            border-color: rgba(221,48,78,0.3);
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .sec-card-img {
+            width: 100%;
+            aspect-ratio: 3/2;
+            object-fit: cover;
+            object-position: center 20%;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .sec-card:hover .sec-card-img { transform: scale(1.04); }
+
+        .sec-card-body { padding: 14px 16px 16px; }
+
+        .sec-card-tag {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: #DD304E;
+            margin-bottom: 6px;
+        }
+
+        .sec-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .sec-card-hook {
+            font-size: 12px;
+            color: rgba(255,255,255,0.35);
+            line-height: 1.6;
+            font-style: italic;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* =====================
+           CULTURAL UNIVERSE SECTION
+           "What makes this world different"
+        ===================== */
+        .universe-section {
+            background: #050505;
+            padding: 60px 64px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .universe-head {
+            margin-bottom: 40px;
+        }
+
+        .universe-eyebrow {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(221,48,78,0.7);
+            margin-bottom: 10px;
+        }
+
+        .universe-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.2;
+            max-width: 480px;
+        }
+
+        .universe-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .uni-cell {
+            background: #070707;
+            padding: 32px 30px;
+            transition: background 0.2s;
+            cursor: default;
+        }
+
+        .uni-cell:hover { background: #0d0d0d; }
+
+        .uni-cell-char {
+            font-family: 'Playfair Display', serif;
+            font-size: 44px;
+            color: rgba(255,255,255,0.08);
+            display: block;
+            margin-bottom: 14px;
+            line-height: 1;
+        }
+
+        .uni-cell-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .uni-cell-body {
+            font-size: 12px;
+            color: rgba(255,255,255,0.35);
+            line-height: 1.7;
+        }
+
+        /* vs Netflix callout */
+        .vs-strip {
+            background: rgba(221,48,78,0.06);
+            border: 1px solid rgba(221,48,78,0.15);
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-top: 32px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .vs-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .vs-text {
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.7;
+        }
+
+        .vs-text strong { color: white; }
+
+        /* =====================
+           MODAL
+        ===================== */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.88);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-bg.open { display: flex; }
+
+        .modal-box {
+            background: #111;
+            border-radius: 16px;
+            width: min(860px, 94vw);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            scrollbar-width: none;
+            animation: modalIn 0.3s cubic-bezier(.25,.8,.25,1);
+        }
+
+        .modal-box::-webkit-scrollbar { display: none; }
+
+        @keyframes modalIn {
+            from { transform: scale(0.88) translateY(24px); opacity: 0; }
+            to   { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .modal-x {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            width: 34px;
+            height: 34px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            color: rgba(255,255,255,0.5);
+            z-index: 10;
+            transition: all 0.18s;
+        }
+        .modal-x:hover { color: white; background: rgba(0,0,0,0.9); }
+
+        .modal-img-wrap {
+            width: 100%;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            border-radius: 16px 16px 0 0;
+            position: relative;
+            background: #1a1a1a;
+        }
+
+        .modal-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 15%;
+        }
+
+        .modal-img-grad {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 70%;
+            background: linear-gradient(to top, #111, transparent);
+        }
+
+        .modal-img-title {
+            position: absolute;
+            bottom: 24px;
+            left: 28px;
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            font-weight: 900;
+        }
+
+        .modal-body { padding: 22px 28px 34px; }
+
+        .modal-meta {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 14px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.35);
+            flex-wrap: wrap;
+        }
+
+        .modal-gtag {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .modal-desc {
+            font-size: 14px;
+            color: rgba(255,255,255,0.58);
+            line-height: 1.78;
+            margin-bottom: 22px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .ctx-section-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.2);
+            margin-bottom: 14px;
+        }
+
+        .ctx-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .ctx-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px;
+            padding: 14px 16px;
+            transition: all 0.2s;
+        }
+
+        .ctx-card:hover {
+            background: rgba(221,48,78,0.07);
+            border-color: rgba(221,48,78,0.2);
+        }
+
+        .ctx-top { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+        .ctx-icon { font-size: 15px; }
+        .ctx-title { font-size: 12px; font-weight: 600; color: white; }
+        .ctx-body { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.62; }
+
+        /* =====================
+           GENRE TAGS
+        ===================== */
+        .tag-romance    { background: rgba(232,90,138,0.15); color: #f07ba8; }
+        .tag-historical { background: rgba(212,164,76,0.15);  color: #e0bc70; }
+        .tag-fantasy    { background: rgba(124,92,191,0.15);  color: #c0a8f5; }
+        .tag-thriller   { background: rgba(30,122,90,0.15);   color: #5dcca7; }
+        .tag-youth      { background: rgba(44,109,181,0.15);  color: #70b8f4; }
+        .tag-sports     { background: rgba(220,100,30,0.15);  color: #f0a060; }
+
+        /* =====================
+           ANIMATIONS
+        ===================== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+
+<body class="surprise-page explore-page">
+
+    <!-- SIDE NAV -->
+    <div class="side-nav">
+        <a href="index.html" class="logo">
+            <div class="logo-main">CANAL</div>
+            <span class="plus-box"></span>
+            <div class="logo-sub">Asian</div>
+        </a>
+        <div class="divider2"></div>
+        <a href="surprise.html" class="nav-item">Surprise <span class="arrow">></span></a>
+        <a href="discussion.html" class="nav-item">Discussion <span class="arrow">></span></a>
+        <a href="explore.html" class="nav-item active">Explore <span class="arrow">></span></a>
+    </div>
+
+    <!-- =====================
+         MOOD SCREEN
+    ===================== -->
+    <div class="mood-screen" id="moodScreen">
+        <div class="mood-eyebrow">Canal+ Asian · Explore</div>
+        <h1 class="mood-heading">
+            What do you<br>feel like<br><em>tonight?</em>
+        </h1>
+
+        <div class="mood-grid">
+            <button class="mood-btn" onclick="chooseMood('lost')">
+                <span class="mood-emoji">🌊</span>
+                <span class="mood-label">Get lost in another world</span>
+                <span class="mood-sub">Fantasy, myth, immortal realms</span>
+            </button>
+            <button class="mood-btn" onclick="chooseMood('moved')">
+                <span class="mood-emoji">💔</span>
+                <span class="mood-label">Feel something real</span>
+                <span class="mood-sub">Love that earns it, grief that lands</span>
+            </button>
+            <button class="mood-btn" onclick="chooseMood('think')">
+                <span class="mood-emoji">⚔️</span>
+                <span class="mood-label">Something to think about</span>
+                <span class="mood-sub">Honour, loyalty, impossible choices</span>
+            </button>
+            <button class="mood-btn" onclick="chooseMood('tense')">
+                <span class="mood-emoji">🔍</span>
+                <span class="mood-label">Keep me on edge</span>
+                <span class="mood-sub">Tension, mystery, moral stakes</span>
+            </button>
+            <button class="mood-btn" onclick="chooseMood('light')">
+                <span class="mood-emoji">🌸</span>
+                <span class="mood-label">Keep it light</span>
+                <span class="mood-sub">Youth, warmth, first things</span>
+            </button>
+            <button class="mood-btn" onclick="chooseMood('place')">
+                <span class="mood-emoji">🏔️</span>
+                <span class="mood-label">Take me somewhere</span>
+                <span class="mood-sub">A world to inhabit, not just watch</span>
+            </button>
+        </div>
+
+        <p class="mood-footer">
+            Not sure? <span onclick="chooseMood('all')">Show me everything →</span>
+        </p>
+    </div>
+
+    <!-- =====================
+         RESULTS SCREEN
+    ===================== -->
+    <div class="results-screen" id="resultsScreen">
+
+        <!-- FEATURED SHOW — full viewport -->
+        <div class="feature-card reveal" id="featureCard" onclick="if(currentShow&&currentShow.link){window.open(currentShow.link,'_blank')}else{openModal(currentShow)}">
+            <img class="feature-img" id="featureImg" src="" alt="">
+            <div class="feature-grad"></div>
+            <div class="feature-num" id="featureNum">01</div>
+
+            <div class="feature-content">
+                <div class="feature-mood-tag" id="featureMoodTag"></div>
+                <h2 class="feature-title" id="featureTitle"></h2>
+                <div class="feature-meta" id="featureMeta"></div>
+                <p class="feature-hook" id="featureHook"></p>
+                <div class="feature-insight">
+                    <span class="insight-label">Context</span>
+                    <span class="insight-text" id="featureInsight"></span>
+                </div>
+                <div class="feature-actions">
+                    <button class="btn-watch" id="featureWatchBtn" onclick="event.stopPropagation();handleWatch(currentShow)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="black"><polygon points="5,3 19,12 5,21"/></svg>
+                        Watch now
+                    </button>
+                    <button class="btn-more" onclick="event.stopPropagation();openModal(currentShow)">More info</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MORE LIKE THIS -->
+        <div class="secondary-row reveal" id="secondaryRow">
+            <div class="sec-head">
+                <h3 class="sec-title" id="secTitle"></h3>
+                <span class="sec-sub" id="secSub"></span>
+            </div>
+            <div class="sec-cards" id="secCards"></div>
+        </div>
+
+        <!-- CULTURAL UNIVERSE -->
+        <div class="universe-section reveal">
+            <div class="universe-head">
+                <div class="universe-eyebrow">Why Canal+ Asian</div>
+                <h3 class="universe-title">The cultural world behind every story</h3>
+            </div>
+
+            <div class="universe-grid">
+                <div class="uni-cell">
+                    <span class="uni-cell-char">缘</span>
+                    <div class="uni-cell-title">Yuán fèn — predestined connection</div>
+                    <div class="uni-cell-body">Why Asian romances feel so different from Western love stories. Not luck or chemistry — something older, cosmological. Love as a debt carried across lifetimes.</div>
+                </div>
+                <div class="uni-cell">
+                    <span class="uni-cell-char">義</span>
+                    <div class="uni-cell-title">Yì — loyalty and righteousness</div>
+                    <div class="uni-cell-body">Why characters sacrifice everything for a bond that isn't romantic. The Confucian value that drives more plot decisions than love ever could. More important than survival.</div>
+                </div>
+                <div class="uni-cell">
+                    <span class="uni-cell-char">面</span>
+                    <div class="uni-cell-title">Miànzi — face and social honour</div>
+                    <div class="uni-cell-body">The social currency that explains a hundred dramatic confrontations. Why a character can't simply say sorry — and what it costs them not to. Not pride. Something structural.</div>
+                </div>
+                <div class="uni-cell">
+                    <span class="uni-cell-char">江</span>
+                    <div class="uni-cell-title">Jiānghú — the parallel world</div>
+                    <div class="uni-cell-body">A complete society outside imperial authority — its own laws, honour codes, and hierarchy. Not 'the countryside'. A world with its own rules, where your real self lives.</div>
+                </div>
+                <div class="uni-cell">
+                    <span class="uni-cell-char">帝</span>
+                    <div class="uni-cell-title">The imperial exam system</div>
+                    <div class="uni-cell-body">Why so many historical dramas hinge on a single test. The exam didn't just sort talent — it decided family fate, social mobility, and the meaning of a generation's labour.</div>
+                </div>
+                <div class="uni-cell">
+                    <span class="uni-cell-char">道</span>
+                    <div class="uni-cell-title">Dào — the way underneath everything</div>
+                    <div class="uni-cell-body">The Taoist foundation beneath every xianxia fantasy — immortal realms, spiritual power, the balance between light and dark. Not magic. A philosophical universe.</div>
+                </div>
+            </div>
+
+            <div class="vs-strip">
+                <div class="vs-icon">◈</div>
+                <div class="vs-text">
+                    <strong>Netflix shows you what you've already watched.</strong> We show you what's worth understanding — and give you the context to actually understand it. Not a genre tag. A cultural world. That's what only Canal+ Asian can offer.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-bg" id="modalBg" onclick="bgClick(event)">
+        <div class="modal-box">
+            <div class="modal-x" onclick="closeModal()">&#x2715;</div>
+            <div class="modal-img-wrap">
+                <img id="mImg" src="" alt="">
+                <div class="modal-img-grad"></div>
+                <div class="modal-img-title" id="mTitle"></div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-meta" id="mMeta"></div>
+                <div class="modal-desc" id="mDesc"></div>
+                <div class="modal-actions">
+                    <button class="btn-watch" id="modalWatchBtn" style="font-size:13px;padding:10px 22px;" onclick="handleWatch(currentShow)">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="black"><polygon points="5,3 19,12 5,21"/></svg>
+                        Watch now
+                    </button>
+                    <button class="btn-more" style="font-size:13px;padding:10px 22px;">+ My list</button>
+                </div>
+                <div class="ctx-section-label">Cultural context</div>
+                <div class="ctx-grid" id="mCtx"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    /* =====================
+       DATA
+    ===================== */
+    const ALL = [
+        {
+            id:"cm", title:"Silent Truth", origin:"China · 2020",
+            genre:"thriller", genreLabel:"Thriller", eps:"12 eps",
+            img:"images/chenmo.jpg", bgPos:"center 10%",
+            moods:["think","tense"],
+            moodTag:"If you want something to think about",
+            hook:"A man spent three years in prison for a murder he committed — but the person he killed deserved it. Now he wants the real story told. So does a journalist. The system does not.",
+            insight:"The show is a quiet argument about institutional silence: who gets to speak, who is believed, and what it costs to tell the truth in public.",
+            desc:"A prosecutor reopens a closed case and uncovers a truth that implicates the system itself. Taut, precise, and morally serious — one of the finest legal thrillers China has produced. It asks not just who committed the crime, but who decides what counts as justice.",
+            link:"../index.html#team-pages",
+            ctx:[
+                {i:"⚖️", t:"The Chinese legal system on screen", b:"The procuratorate — a body distinct from both police and courts — is rarely dramatised. The show uses it precisely."},
+                {i:"🤐", t:"Institutional silence as subject", b:"The drama is about what the system conceals, not just what criminals do. A rare structural critique within popular television."},
+                {i:"📰", t:"Investigative journalism in China", b:"The journalist character reflects the real constraints on reporting — and the specific courage required to work within them."},
+                {i:"🔦", t:"Truth as procedural, not heroic", b:"Unlike Western legal thrillers, resolution comes through accumulation and patience — not a single dramatic revelation."},
+            ]
+        },
+        {
+            id:"qpy", title:"Serenade of Peaceful Joy", origin:"China · 2020",
+            genre:"historical", genreLabel:"Historical", eps:"69 eps",
+            img:"images/qingpingyue.jpg", bgPos:"center 0%",
+            moods:["lost","moved"],
+            moodTag:"If you want to get lost in another world",
+            hook:"A Song Dynasty emperor who wrote poetry more beautifully than he ruled an empire. The court is the world — and it is as intricate as any fantasy realm.",
+            insight:"The Song Dynasty was China's most culturally refined era: poetry, painting and philosophy flourished while the empire contracted. The show understands this contradiction.",
+            desc:"Set in the imperial court of the Northern Song Dynasty, the series follows Emperor Renzong — a ruler of rare sensitivity — as he navigates politics, love, and the weight of an empire. Visually sumptuous and emotionally layered, it rewards patient viewers with one of the most immersive historical worlds in recent Chinese drama.",
+            link:"../index.html#team-pages",
+            ctx:[
+                {i:"🏯", t:"Northern Song — China's cultural peak", b:"960–1127 CE: the era of landscape painting, ci poetry, and the first paper money. A civilisation of extraordinary refinement."},
+                {i:"👑", t:"Emperor Renzong — the humane ruler", b:"One of history's most praised emperors — not for conquest, but for restraint. His reign produced Su Shi, Ouyang Xiu, Fan Zhongyan."},
+                {i:"📜", t:"Ci poetry as emotional language", b:"The Song Dynasty invented the ci form — lyric poetry set to music. Characters express what they cannot say directly through verse."},
+                {i:"🎭", t:"Court politics as character", b:"The imperial court is not a backdrop — it is the drama's world, with its own physics of loyalty, ambition, and grief."},
+            ]
+        },
+        {
+            id:"s4", title:"Love Between Fairy and Devil", origin:"China · 2022",
+            genre:"fantasy", genreLabel:"Fantasy", eps:"36 eps",
+            img:"images/show4.jpg", bgPos:"center 20%",
+            moods:["lost","moved"],
+            moodTag:"If you want to get lost in another world",
+            hook:"A sea fairy and a devil king swap souls. They must understand each other before they can reclaim their bodies — and themselves.",
+            insight:"Xianxia is a genre rooted in Taoist cosmology with 40 years of literary history. The immortal realms are a philosophical universe, not set decoration.",
+            desc:"A sea fairy and a devil king swap souls and are forced to understand each other. High-fantasy xianxia with more emotional intelligence than the genre usually allows.",
+            ctx:[
+                {i:"⛩️", t:"Xianxia — immortal cultivation", b:"Fantasy rooted in Taoist cosmology — immortal realms, spiritual power, and Eastern philosophy, not Western religion."},
+                {i:"☯️", t:"Yin and yang as plot engine", b:"The fairy is light; the devil king is shadow. Their proximity dramatises complementary opposites — not just 'opposites attract'."},
+                {i:"🌊", t:"The sea as feminine space", b:"In Chinese cosmology, the sea realm is associated with feminine spiritual power — this places the heroine cosmologically."},
+                {i:"👹", t:"The demon lord archetype", b:"Not the Western devil — a being whose corruption is tied to an original wound. Sympathy is built into the cosmology."},
+            ]
+        },
+        {
+            id:"s3", title:"Twenty-Four Strategies of Chang'an", origin:"China · 2023",
+            genre:"historical", genreLabel:"Historical", eps:"38 eps",
+            img:"images/show3.jpg", bgPos:"center 15%",
+            moods:["think","tense"],
+            moodTag:"If you want something to think about",
+            hook:"He returned to Chang'an to avenge everyone. The show forces him to ask: what if revenge is too small an answer?",
+            insight:"Snow falls in every pivotal scene. In classical Chinese poetry, snow marks irreversible change — not decoration.",
+            desc:"A young man returns to Chang'an to avenge his family — but is forced to choose between personal vengeance and a larger cause. Snow and blood as deliberate visual language throughout.",
+            ctx:[
+                {i:"🏯", t:"Tang Dynasty — China at its peak", b:"618–907 CE, cosmopolitan and internationally connected. The show uses this era as an argument, not a backdrop."},
+                {i:"❄️", t:"Snow as moral marker", b:"Every pivotal scene happens in snow. In classical poetry, snow marks grief and irreversible change."},
+                {i:"⚖️", t:"Personal loyalty vs. state duty", b:"A tension running through Tang-era literature — private vengeance vs. public obligation. A moral problem, not a plot device."},
+                {i:"🗡️", t:"The 24 stratagems", b:"References the historical 36 Stratagems — a real military philosophy text. Not invented for the show."},
+            ]
+        },
+        {
+            id:"s9", title:"Restart", origin:"China · 2019",
+            genre:"thriller", genreLabel:"Thriller", eps:"24 eps",
+            img:"images/show9.jpg", bgPos:"center 20%",
+            moods:["tense","think"],
+            moodTag:"If you want to stay on edge",
+            hook:"They've looped through the same day 24 times. They're not clever. They're just not willing to give up on being decent.",
+            insight:"The show's thesis is Confucian: character is built through repeated failure and renewed effort — not talent.",
+            desc:"Two ordinary people loop through a single day 25 times to prevent a tragedy. Unlike Western time-loop stories, they aren't geniuses — they succeed through stubbornness, decency, and trust in others.",
+            ctx:[
+                {i:"🔄", t:"The loop as moral correction", b:"Chinese time-loop drama uses repetition as a second chance at righteousness — not a hack for self-improvement."},
+                {i:"🤝", t:"Collectivism in crisis", b:"The protagonists succeed because they keep trusting others. A deliberately un-Western take on the genre."},
+                {i:"🪨", t:"韧性 — Rèn xìng", b:"The Confucian idea that character is built through repeated failure. 25 loops as dramatisation of this belief."},
+                {i:"💡", t:"Ordinary heroes", b:"The show rejects the 'chosen one' archetype entirely — anyone could be in their position. That's the point."},
+            ]
+        },
+        {
+            id:"s1", title:"Shine on Me", origin:"China · 2023",
+            genre:"romance", genreLabel:"Romance", eps:"40 eps",
+            img:"images/show1.jpg", bgPos:"center 25%",
+            moods:["moved","light"],
+            moodTag:"If you want to feel something real",
+            hook:"No grand gestures. No manufactured misunderstandings. Just two people who decide to show up for each other.",
+            insight:"Chinese romance shows love through quiet acts — not speeches. The restraint isn't a flaw. It's the point.",
+            desc:"A musician and a photographer grow into love through genuine mutual respect — no manufactured misunderstandings, no grand gestures. One of the most emotionally honest romances in recent C-drama.",
+            ctx:[
+                {i:"💬", t:"Love through action", b:"Affection is shown through service and presence. Verbal confession is the end, not the beginning."},
+                {i:"🏙️", t:"Beijing's creative class", b:"Maps a real generational shift — young people navigating careers their parents had no names for."},
+                {i:"🎵", t:"Music as emotional language", b:"Sound plays a structural role. In Chinese culture, music bridges public and private feeling."},
+                {i:"☀️", t:"The sun metaphor", b:"The title references warmth felt with eyes closed — a classical Tang poetry image of unconditional presence."},
+            ]
+        },
+        {
+            id:"s2", title:"Go to a Place with Wind", origin:"China · 2023",
+            genre:"romance", genreLabel:"Slice of Life", eps:"40 eps",
+            img:"images/show2.jpg", bgPos:"center 20%",
+            moods:["place","light","moved"],
+            moodTag:"If you want to be taken somewhere",
+            hook:"She didn't go to Yunnan to find herself. She went to stop trying. The place did the rest.",
+            insight:"The title quotes a Tang poem. 'There is wind' means a place beyond obligation — the show is built on literary longing, not just scenery.",
+            desc:"A burned-out professional flees to Yunnan and finds something she wasn't looking for. Less about plot, more about the texture of a place — mountains, dried persimmons, and the pace the city forgot.",
+            ctx:[
+                {i:"🏔️", t:"Yunnan as cultural escape", b:"Yunnan is shorthand in contemporary China for escape and authenticity — tapping into real anxiety about urban burnout."},
+                {i:"🌬️", t:"有风 — the title", b:"'There is wind' quotes Li Bai. It means a place beyond obligation — literary longing, not just scenery."},
+                {i:"🍵", t:"Bai people and culture", b:"The setting is specifically the Bai ethnic minority homeland — architecture, food and rituals are carefully Bai, not generic."},
+                {i:"🏡", t:"Slow TV genre", b:"Part of a wave of shows where place is the protagonist. The pacing is intentional, not leisurely."},
+            ]
+        },
+        {
+            id:"s5", title:"Mysterious Lotus Casebook", origin:"China · 2023",
+            genre:"thriller", genreLabel:"Thriller", eps:"40 eps",
+            img:"images/show5.jpg", bgPos:"center 30%",
+            moods:["tense","think","place"],
+            moodTag:"If you want to stay on edge",
+            hook:"Three men who shouldn't trust each other. One world that runs on honour, not law.",
+            insight:"Jiānghú isn't just wilderness — it's a complete society with its own laws outside imperial power.",
+            desc:"A constable, a physician, and a former martial arts master form an unlikely alliance to solve crimes in the jianghu. One of the most beloved wuxia dramas in recent years — built on chemistry and moral complexity.",
+            ctx:[
+                {i:"⚔️", t:"Wuxia — the martial arts world", b:"A genre with a century of literary history about a parallel world with honour codes — not just fight choreography."},
+                {i:"🏥", t:"The physician as moral witness", b:"Medicine in classical Chinese storytelling occupies a specific moral position — healers who see both sides."},
+                {i:"🌿", t:"Jiānghú — rivers and lakes", b:"A complete world outside imperial authority. Understanding this changes every plot decision in the show."},
+                {i:"🔍", t:"Detective fiction, Chinese style", b:"The Gong'an genre of crime investigation dates to the Tang Dynasty — a thousand-year literary tradition."},
+            ]
+        },
+        {
+            id:"s7", title:"Love Game in Eastern Fantasy", origin:"China · 2023",
+            genre:"fantasy", genreLabel:"Fantasy", eps:"36 eps",
+            img:"images/show7.jpg", bgPos:"center 40%",
+            moods:["lost","light"],
+            moodTag:"If you want to get lost in another world",
+            hook:"An ancient rivalry, a forced marriage, and two immortals who have to choose between what they were and what they're becoming.",
+            insight:"Love in xianxia spans multiple incarnations — the relationship has a past the characters discover, not create.",
+            desc:"An ancient rivalry and a marriage contract force two opposing immortals together. Fast-paced and visually spectacular, with world-building that rewards attention.",
+            ctx:[
+                {i:"⚡", t:"Lightning as spiritual power", b:"In Taoist cosmology, thunder and lightning represent divine punishment and force — the title isn't metaphorical."},
+                {i:"💫", t:"Multi-lifetime romance", b:"Love in xianxia spans multiple incarnations — the relationship has a past the characters discover, not create."},
+                {i:"📜", t:"Marriage contracts in fantasy", b:"The arranged-marriage device echoes real historical practice while exploring consent in a supernatural frame."},
+                {i:"🏛️", t:"Heavenly realms hierarchy", b:"The immortal bureaucracy mirrors real imperial structures — ranks, courts and politics that make the fantasy feel inhabited."},
+            ]
+        },
+        {
+            id:"s10", title:"When I Fly Towards You", origin:"China · 2023",
+            genre:"youth", genreLabel:"Youth", eps:"24 eps",
+            img:"images/show10.jpg", bgPos:"center 20%",
+            moods:["light","moved"],
+            moodTag:"If you want to keep it light",
+            hook:"The best thing about being young is that you don't know yet how things will go. This show remembers that.",
+            insight:"The university entrance exam looms over every Chinese youth story. It's not just a test — it's the shape of a generation's anxiety.",
+            desc:"A high school romance navigating first love, friendship, and the looming pressure of exams. Light, precisely observed, and emotionally true to its age.",
+            ctx:[
+                {i:"📚", t:"Gaokao culture", b:"The university entrance exam determines life trajectory. Every youth drama is set against this pressure — it's structural, not incidental."},
+                {i:"🏫", t:"High school as social world", b:"Reflects a real world of class hierarchies and teacher authority that Western coming-of-age stories ignore."},
+                {i:"💌", t:"Indirect confession culture", b:"First love rarely involves direct declaration — indirection through notes, actions, and proximity is the vocabulary."},
+                {i:"🌸", t:"青春 — youth as cultural value", b:"Qīngchūn (youth) is a genre and a value in China — shows here are in dialogue with a long tradition of idealising this period."},
+            ]
+        },
+        {
+            id:"sh", title:"The Whirlwind Girl", origin:"China · 2015",
+            genre:"sports", genreLabel:"Sports", eps:"32 eps",
+            img:"images/show.jpg", bgPos:"center 20%",
+            moods:["tense","think","light"],
+            moodTag:"If you want to feel something real",
+            hook:"She had the talent and no one who believed in her. The show is about what happens when she decides to believe in herself anyway.",
+            insight:"In Chinese storytelling, sport training is always character training. Discipline and loyalty come through the body, not reflection.",
+            desc:"A young woman with raw talent fights through competitive martial arts while navigating loyalty, betrayal, and first love. Emotional and kinetic — one of the most rewatchable sports dramas ever made.",
+            ctx:[
+                {i:"🥋", t:"Martial arts as moral formation", b:"Sport training in Chinese drama is always character training — discipline and loyalty come through the body."},
+                {i:"👨‍🏫", t:"The shifu (师父) relationship", b:"The master-student bond is one of Chinese culture's most important — with obligations that outlast the training itself."},
+                {i:"🏆", t:"Competition as self-discovery", b:"The tournament format is a classical structure — each opponent is also a mirror for the protagonist's growth."},
+                {i:"🌀", t:"Whirlwind kick — real technique", b:"References an actual taekwondo technique. The choreography is built around real competitive martial arts, not film fantasy."},
+            ]
+        },
+    ];
+
+    const MOOD_LABELS = {
+        lost:  { tag:"Perfect for tonight", sec:"More worlds to get lost in", sub:"Fantasy, myth, immortal realms" },
+        moved: { tag:"Feel something real",  sec:"More that will move you",    sub:"Love, grief, honesty" },
+        think: { tag:"Worth thinking about", sec:"More to wrestle with",       sub:"Honour, loyalty, impossible choices" },
+        tense: { tag:"Edge of your seat",    sec:"More to keep you tense",     sub:"Tension, mystery, moral stakes" },
+        light: { tag:"Light and true",       sec:"More warmth",                sub:"Youth, first things, easy evenings" },
+        place: { tag:"Take me somewhere",    sec:"More worlds to inhabit",     sub:"Place as protagonist" },
+        all:   { tag:"Explore everything",   sec:"More from Canal+ Asian",     sub:"Curated, not algorithmic" },
+    };
+
+    let currentShow = null;
+    let currentMood = null;
+
+    /* =====================
+       MOOD SELECTION
+    ===================== */
+    function chooseMood(mood) {
+        currentMood = mood;
+
+        // filter shows
+        const pool = mood === 'all'
+            ? ALL
+            : ALL.filter(s => s.moods.includes(mood));
+
+        if (!pool.length) return;
+
+        // featured = first match
+        currentShow = pool[0];
+        const others = pool.slice(1);
+
+        // populate feature card
+        const fc = document.getElementById('featureCard');
+        document.getElementById('featureImg').src = currentShow.img;
+        document.getElementById('featureImg').style.objectPosition = currentShow.bgPos;
+        document.getElementById('featureMoodTag').textContent = MOOD_LABELS[mood].tag;
+        document.getElementById('featureTitle').textContent = currentShow.title;
+        document.getElementById('featureMeta').innerHTML =
+            `<span class="modal-gtag tag-${currentShow.genre}">${currentShow.genreLabel}</span>
+             <span class="fmeta-sep">·</span>
+             <span>${currentShow.origin}</span>
+             <span class="fmeta-sep">·</span>
+             <span>${currentShow.eps}</span>`;
+        document.getElementById('featureHook').textContent = '"' + currentShow.hook + '"';
+        document.getElementById('featureInsight').textContent = currentShow.insight;
+        document.getElementById('featureNum').textContent = '01';
+
+        // secondary row
+        document.getElementById('secTitle').textContent = MOOD_LABELS[mood].sec;
+        document.getElementById('secSub').textContent = MOOD_LABELS[mood].sub;
+        const secCards = document.getElementById('secCards');
+        secCards.innerHTML = '';
+        (others.length ? others : ALL.filter(s=>s.id!==currentShow.id).slice(0,4)).slice(0,4).forEach(show => {
+            const d = document.createElement('div');
+            d.className = 'sec-card';
+            d.innerHTML = `
+                <img class="sec-card-img" src="${show.img}" alt="${show.title}"
+                     style="object-position:${show.bgPos}"
+                     onerror="this.parentElement.style.background='#1c1c1c';this.style.display='none'">
+                <div class="sec-card-body">
+                    <div class="sec-card-tag">${show.genreLabel}</div>
+                    <div class="sec-card-title">${show.title}</div>
+                    <div class="sec-card-hook">"${show.hook}"</div>
+                </div>
+            `;
+            d.addEventListener('click', () => {
+                if (show.link) { window.open(show.link, '_blank'); } else { openModal(show); }
+            });
+            secCards.appendChild(d);
+        });
+
+        // transition
+        document.getElementById('moodScreen').style.display = 'none';
+        const rs = document.getElementById('resultsScreen');
+        rs.classList.add('visible');
+
+        // trigger reveal animations
+        setTimeout(() => {
+            document.querySelectorAll('.reveal').forEach((el, i) => {
+                setTimeout(() => el.classList.add('in'), i * 120);
+            });
+        }, 50);
+    }
+
+    /* =====================
+       MODAL
+    ===================== */
+    function openModal(show) {
+        currentShow = show;
+        document.getElementById('mImg').src = show.img;
+        document.getElementById('mImg').style.objectPosition = show.bgPos;
+        document.getElementById('mTitle').textContent = show.title;
+        document.getElementById('mMeta').innerHTML =
+            `<span class="modal-gtag tag-${show.genre}">${show.genreLabel}</span>
+             <span>${show.origin}</span>
+             <span>·</span>
+             <span>${show.eps}</span>`;
+        document.getElementById('mDesc').textContent = show.desc;
+
+        const grid = document.getElementById('mCtx');
+        grid.innerHTML = '';
+        show.ctx.forEach(c => {
+            const d = document.createElement('div');
+            d.className = 'ctx-card';
+            d.innerHTML = `<div class="ctx-top"><span class="ctx-icon">${c.i}</span><span class="ctx-title">${c.t}</span></div><div class="ctx-body">${c.b}</div>`;
+            grid.appendChild(d);
+        });
+
+        document.getElementById('modalBg').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function handleWatch(show) {
+        if (show && show.link) {
+            window.open(show.link, '_blank');
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('modalBg').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function bgClick(e) {
+        if (e.target === document.getElementById('modalBg')) closeModal();
+    }
+    </script>
+</body>
+</html>

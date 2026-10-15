@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Being Surprised — Canal+ Asian</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+
+        .surprise-page {
+            min-height: 100vh;
+            height: auto;
+        }
+
+        /* ── header ── */
+        .surprise-header {
+            margin-top: 52px;
+            padding-left: 240px;
+            padding-right: 60px;
+        }
+
+        .surprise-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0 0 6px;
+        }
+
+        .surprise-header h1 span {
+            position: relative;
+            display: inline-block;
+        }
+
+        .surprise-header h1 span::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #DD304E;
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: lineIn 0.6s 0.4s ease both;
+        }
+
+        @keyframes lineIn { to { transform: scaleX(1); } }
+
+        .surprise-header p {
+            margin: 8px 0 0;
+            font-size: 14px;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 0.2px;
+        }
+
+        /* ── rank pips ── */
+        .rank-strip {
+            padding-left: 240px;
+            padding-right: 60px;
+            margin-top: 16px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .rank-pip {
+            width: 28px;
+            height: 3px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.1);
+            transition: background 0.4s;
+        }
+
+        .rank-pip.done { background: #DD304E; }
+
+        /* ── cards area ── */
+        .comments-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            width: calc(100% - 210px);
+            margin-left: 240px;
+            margin-top: 26px;
+            padding: 0 40px 60px 0;
+            align-items: flex-start;
+        }
+
+        /* ── card ── */
+        .comment {
+            display: inline-block;
+            padding: 18px 22px;
+            font-size: clamp(13px, 1vw, 17px);
+            line-height: 1.65;
+            color: rgba(255,255,255,0.72);
+
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            backdrop-filter: blur(6px);
+
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+
+            opacity: 0;
+            transform: translateY(18px);
+        }
+
+        .comment.visible { opacity: 1; transform: translateY(0); }
+
+        /* variable widths */
+        .comment:nth-child(1)  { width: 55%; }
+        .comment:nth-child(2)  { width: 38%; }
+        .comment:nth-child(3)  { width: 38%; }
+        .comment:nth-child(4)  { width: 55%; }
+        .comment:nth-child(5)  { width: 30%; }
+        .comment:nth-child(6)  { width: 62%; }
+        .comment:nth-child(7)  { width: 46%; }
+        .comment:nth-child(8)  { width: 46%; }
+        .comment:nth-child(9)  { width: 60%; }
+        .comment:nth-child(10) { width: 33%; }
+        .comment:nth-child(11) { width: 58%; }
+        .comment:nth-child(12) { width: 36%; }
+
+        /* link cards — subtle external indicator */
+        .comment[data-link] {
+            border-color: rgba(221,48,78,0.2);
+            background: rgba(221,48,78,0.04);
+        }
+
+        .comment[data-link]:hover {
+            border-color: rgba(221,48,78,0.6) !important;
+            background: rgba(221,48,78,0.12) !important;
+        }
+
+        .comment-link-hint {
+            display: block;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(221,48,78,0.45);
+            margin-top: 10px;
+        }
+
+        /* tilts */
+        .comment.visible:nth-child(2n)  { transform: rotate(-0.5deg); }
+        .comment.visible:nth-child(3n)  { transform: rotate(0.6deg);  }
+        .comment.visible:nth-child(5n)  { transform: rotate(-1deg);   }
+
+        .comment-rank {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: rgba(221,48,78,0.55);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .comment-quote {
+            display: block;
+            font-style: italic;
+        }
+
+        .comment:hover {
+            transform: scale(1.04) rotate(0deg) !important;
+            background: rgba(221,48,78,0.1);
+            border-color: rgba(221,48,78,0.45);
+            color: white;
+            box-shadow: 0 8px 32px rgba(221,48,78,0.08);
+        }
+
+        .comment.seen {
+            opacity: 0.38;
+            border-color: rgba(255,255,255,0.04);
+        }
+
+        .comment.seen .comment-rank { color: rgba(255,255,255,0.18); }
+        .comment.seen:hover { opacity: 0.7; }
+
+        /* ── popup ── */
+        .popup {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.82);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            backdrop-filter: blur(8px);
+        }
+
+        .popup-content {
+            width: 560px;
+            max-width: 92vw;
+            background: #111;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            animation: popIn 0.28s cubic-bezier(.25,.8,.25,1);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.88) translateY(16px); opacity: 0; }
+            to   { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .popup-img-wrap {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .popup-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 6s ease;
+        }
+
+        .popup-content:hover img { transform: scale(1.04); }
+
+        .popup-img-grad {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 65%;
+            background: linear-gradient(to top, #111, transparent);
+        }
+
+        .popup-rank-badge {
+            position: absolute;
+            top: 14px;
+            left: 18px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: white;
+            background: #DD304E;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .popup-title-overlay {
+            position: absolute;
+            bottom: 18px;
+            left: 20px;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .popup-text {
+            padding: 18px 22px 22px;
+        }
+
+        .popup-reaction-label {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(221,48,78,0.65);
+            margin-bottom: 8px;
+        }
+
+        .popup-text p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.52);
+            line-height: 1.72;
+            margin: 0 0 18px;
+        }
+
+        .popup-actions { display: flex; gap: 10px; }
+
+        .popup-btn-watch {
+            background: white;
+            color: #000;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 10px 22px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: background 0.2s;
+        }
+
+        .popup-btn-watch:hover { background: rgba(255,255,255,0.85); }
+
+        .popup-btn-more {
+            background: rgba(255,255,255,0.08);
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 10px 18px;
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .popup-btn-more:hover { background: rgba(255,255,255,0.14); }
+
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            width: 32px;
+            height: 32px;
+            background: rgba(0,0,0,0.55);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            color: rgba(255,255,255,0.55);
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .close-btn:hover { color: white; background: rgba(0,0,0,0.85); }
+
+    </style>
+</head>
+
+<body class="surprise-page">
+
+    <div class="side-nav">
+        <a href="index.html" class="logo">
+            <div class="logo-main">CANAL</div>
+            <span class="plus-box"></span>
+            <div class="logo-sub">Asian</div>
+        </a>
+        <div class="divider2"></div>
+        <a href="surprise.html" class="nav-item active">Surprise <span class="arrow">></span></a>
+        <a href="discussion.html" class="nav-item">Discussion <span class="arrow">></span></a>
+        <a href="explore.html" class="nav-item">Explore <span class="arrow">></span></a>
+    </div>
+
+    <section class="surprise-header">
+        <h1><span>Top 10</span> this week</h1>
+        <p>A line spoke to someone. Click the one that speaks to you.</p>
+    </section>
+
+    <div class="rank-strip" id="rankStrip"></div>
+
+    <section class="comments-area">
+
+        <div class="comment"
+            data-rank="01"
+            data-title="Serenade of Peaceful Joy"
+            data-img="images/qingpingyue.jpg"
+            data-position="center 2%"
+            data-imgscale="0.75"
+            data-link="../index.html#team-pages">
+            <span class="comment-rank">#01 · Get Lost in Another World</span>
+            <span class="comment-quote">The greatest sorrow is not the absence of beauty — it is knowing beauty, and knowing it cannot last.</span>
+            <span class="comment-link-hint">Watch on Canal+ Asian ↗</span>
+        </div>
+
+        <div class="comment"
+            data-rank="02"
+            data-title="Silent Truth"
+            data-img="images/chenmo.jpg"
+            data-position="center 10%"
+            data-link="../index.html#team-pages">
+            <span class="comment-rank">#02 · Something to Think About</span>
+            <span class="comment-quote">The truth was never hidden. It was simply never allowed to be heard.</span>
+            <span class="comment-link-hint">Watch on Canal+ Asian ↗</span>
+        </div>
+
+        <div class="comment"
+            data-rank="03"
+            data-title="Twenty-Four Strategies of Chang'an"
+            data-desc="Many pivotal moments unfold on snowy nights — his family's death, his return to Chang'an, even dreams of his father. Snow fell for one night, yet haunted him for life. Still, he rises above vengeance for a greater cause."
+            data-img="images/show3.jpg"
+            data-position="30% 30%">
+            <span class="comment-rank">#03</span>
+            <span class="comment-quote">When I take revenge, not a single soul will be spared.</span>
+        </div>
+
+        <div class="comment"
+            data-rank="04"
+            data-title="Love Between Fairy and Devil"
+            data-desc="Love makes the timid brave, and the proud bow their heads."
+            data-img="images/show4.jpg"
+            data-position="30% 25%">
+            <span class="comment-rank">#04</span>
+            <span class="comment-quote">I love the world, and I love one person.</span>
+        </div>
+
+        <div class="comment"
+            data-rank="05"
+            data-title="Mysterious Lotus Casebook"
+            data-desc="What happens when you reach the top and find nothing there. Three men who shouldn't trust each other — in a world that runs on honour, not law."
+            data-img="images/show5.jpg">
+            <span class="comment-rank">#05</span>
+            <span class="comment-quote">I've stood at the heights and found them empty.</span>
+        </div>
+
+        <div class="comment"
+            data-rank="06"
+            data-title="Live Sports"
+            data-link="../index.html#team-pages">
+            <span class="comment-rank">#06 · Live Sports</span>
+            <span class="comment-quote">Every match is a story. Don't just watch — feel every moment, live.</span>
+            <span class="comment-link-hint">Watch Live ↗</span>
+        </div>
+
+        <div class="comment"
+            data-rank="07"
+            data-title="Love Game in Eastern Fantasy"
+            data-desc="Watching a drama is like riding a roller coaster — but Love Game in Eastern Fantasy ultimately pulled me back on track with its strong second half, keeping me fully engaged until the end."
+            data-img="images/show7.jpg"
+            data-position="30% 70%">
+            <span class="comment-rank">#07</span>
+            <span class="comment-quote">Ignite the sparks — break it!</span>
+        </div>
+
+        <div class="comment"
+            data-rank="08"
+            data-title="Shine on Me"
+            data-desc="This drama made me realize I will never forget what love truly is: it is respect, it is joy, it is sincerity — and most importantly, it is mutual. The relationship between Lin Yusen and Nie Xiguang is one of genuine give and take, and that is what moved me the most."
+            data-img="images/show1.jpg"
+            data-position="30% 30%">
+            <span class="comment-rank">#08</span>
+            <span class="comment-quote">Some love is like a constant sun — even with your eyes closed, even in darkness, you can still feel its warmth.</span>
+        </div>
+
+        <div class="comment"
+            data-rank="09"
+            data-title="Go to a Place with Wind"
+            data-desc="Every time I close the video, my mind is filled with the clouds over Cangshan, the waves of Erhai Lake, and the dried persimmons Grandma Xie laid out in the courtyard. The moment Xu Hongdou's high heels got stuck in the stone-paved path — I felt like she was literally me in another life."
+            data-img="images/show2.jpg"
+            data-position="30% 30%">
+            <span class="comment-rank">#09</span>
+            <span class="comment-quote">I came here just to find a place where no one knows me — to be a good-for-nothing, seriously and without pretense.</span>
+        </div>
+
+        <div class="comment"
+            data-rank="10"
+            data-title="Restart"
+            data-desc="Both protagonists are ordinary people. Through repeated trials and instinct-driven choices — while holding onto kindness and empathy — they finally succeed in saving everyone on the 25th loop."
+            data-img="images/show9.jpg"
+            data-position="30% 50%">
+            <span class="comment-rank">#10</span>
+            <span class="comment-quote">Kindness is not a trivial virtue; it must be supported by one's capability.</span>
+        </div>
+
+        <div class="comment"
+            data-rank="11"
+            data-title="When I Fly Towards You"
+            data-desc="After finishing the whole series, it truly makes you feel the endless possibilities and beauty of youth. It's not just a sweet romance, but a coming-of-age story about growth, friendship, and love."
+            data-img="images/show10.jpg">
+            <span class="comment-rank">#11</span>
+            <span class="comment-quote">Hey, do you feel honoured? I seem to have only done two things today — both are related to you.</span>
+        </div>
+
+    </section>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" id="closeBtn">&#x2715;</span>
+            <div class="popup-img-wrap">
+                <img id="popup-img" src="" alt="">
+                <div class="popup-img-grad"></div>
+                <div class="popup-rank-badge" id="popup-rank"></div>
+                <div class="popup-title-overlay" id="popup-title"></div>
+            </div>
+            <div class="popup-text">
+                <div class="popup-reaction-label">Audience reaction</div>
+                <p id="popup-desc"></p>
+                <div class="popup-actions">
+                    <button class="popup-btn-watch">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="black"><polygon points="5,3 19,12 5,21"/></svg>
+                        Watch now
+                    </button>
+                    <button class="popup-btn-more">+ My list</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* build pips */
+        const strip = document.getElementById('rankStrip');
+        for (let i = 0; i < 11; i++) {
+            const p = document.createElement('div');
+            p.className = 'rank-pip';
+            p.id = `pip-${i}`;
+            strip.appendChild(p);
+        }
+
+        /* stagger entrance */
+        const cards = document.querySelectorAll('.comment');
+        cards.forEach((c, i) => {
+            setTimeout(() => c.classList.add('visible'), 80 + i * 85);
+        });
+
+        /* popup */
+        const popup      = document.getElementById('popup');
+        const popupImg   = document.getElementById('popup-img');
+        const popupTitle = document.getElementById('popup-title');
+        const popupRank  = document.getElementById('popup-rank');
+        const popupDesc  = document.getElementById('popup-desc');
+
+        cards.forEach((card, i) => {
+            card.addEventListener('click', () => {
+                const link = card.dataset.link;
+                if (link) {
+                    window.open(link, '_blank');
+                    return;
+                }
+                popup.style.display = 'flex';
+                popupImg.src = card.dataset.img || '';
+                popupImg.style.objectPosition = card.dataset.position || 'center';
+
+                // scale: make image smaller if specified
+                const scale = card.dataset.imgscale;
+                const imgWrap = document.querySelector('.popup-img-wrap');
+                if (scale) {
+                    imgWrap.style.height = Math.round(300 * parseFloat(scale)) + 'px';
+                } else {
+                    imgWrap.style.height = '300px';
+                }
+
+                popupTitle.textContent = card.dataset.title;
+                popupRank.textContent  = '#' + card.dataset.rank;
+                popupDesc.textContent  = card.dataset.desc;
+
+                if (!card.classList.contains('seen')) {
+                    card.classList.add('seen');
+                    document.getElementById(`pip-${i}`).classList.add('done');
+                }
+            });
+        });
+
+        document.getElementById('closeBtn').addEventListener('click', () => {
+            popup.style.display = 'none';
+        });
+
+        popup.addEventListener('click', e => {
+            if (e.target === popup) popup.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Discussion — Canal+ Asian</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ===== Discussion page layout ===== */
+        .discussion-page {
+            min-height: 100vh;
+        }
+
+        .discussion-header {
+            margin-top: 60px;
+            padding-left: 240px;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .discussion-header p {
+            margin-top: -15px;
+            font-size: 20px;
+            opacity: 0.7;
+        }
+
+        /* ===== Tab bar ===== */
+        .tab-bar {
+            display: flex;
+            gap: 32px;
+            padding-left: 240px;
+            margin-top: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 0;
+        }
+
+        .tab {
+            font-size: 15px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+            padding-bottom: 12px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.25s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .tab:hover {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .tab.active {
+            color: white;
+            border-bottom: 2px solid #DD304E;
+        }
+
+        /* ===== Main layout ===== */
+        .discussion-layout {
+            display: flex;
+            padding-left: 240px;
+            padding-right: 40px;
+            gap: 28px;
+            margin-top: 32px;
+        }
+
+        /* ===== Thread list ===== */
+        .thread-list {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* New post input bar */
+        .new-post-bar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 6px;
+            transition: border-color 0.3s;
+        }
+
+        .new-post-bar:focus-within {
+            border-color: rgba(221,48,78,0.5);
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #DD304E, #7a1828);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .avatar.sm {
+            width: 28px;
+            height: 28px;
+            font-size: 11px;
+        }
+
+        .avatar.teal   { background: linear-gradient(135deg, #1fa89e, #0d5c58); }
+        .avatar.amber  { background: linear-gradient(135deg, #e8a317, #7a4f00); }
+        .avatar.purple { background: linear-gradient(135deg, #8b5cf6, #4c1d95); }
+        .avatar.rose   { background: linear-gradient(135deg, #DD304E, #7a1828); }
+        .avatar.blue   { background: linear-gradient(135deg, #3b82f6, #1e3a8a); }
+
+        .new-post-input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 15px;
+            font-family: inherit;
+            cursor: text;
+        }
+
+        .new-post-input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .post-btn {
+            background: #DD304E;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .post-btn:hover {
+            background: #ff3d5c;
+            transform: translateY(-1px);
+        }
+
+        /* ===== Thread card ===== */
+        .thread-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            padding: 18px 20px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .thread-card:hover {
+            background: rgba(255,255,255,0.07);
+            border-color: rgba(221,48,78,0.3);
+            transform: translateX(4px);
+        }
+
+        .thread-card.pinned {
+            border-color: rgba(221,48,78,0.25);
+            background: rgba(221,48,78,0.05);
+        }
+
+        .thread-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .thread-user {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.75);
+        }
+
+        .thread-time {
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+            margin-left: auto;
+        }
+
+        .pin-badge {
+            font-size: 11px;
+            background: rgba(221,48,78,0.2);
+            color: #DD304E;
+            border-radius: 4px;
+            padding: 2px 7px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+        }
+
+        .thread-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .thread-preview {
+            font-size: 13px;
+            color: rgba(255,255,255,0.45);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .thread-bottom {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-top: 14px;
+        }
+
+        .thread-tag {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.07);
+            border-radius: 20px;
+            padding: 3px 10px;
+        }
+
+        .thread-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.35);
+        }
+
+        .thread-stat svg {
+            opacity: 0.5;
+        }
+
+        .thread-stat.liked {
+            color: #DD304E;
+        }
+
+        .thread-stat.liked svg {
+            opacity: 1;
+        }
+
+        /* ===== Sidebar ===== */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            padding: 18px 20px;
+        }
+
+        .sidebar-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 16px;
+        }
+
+        /* Trending shows */
+        .trending-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .trending-item:last-child {
+            border-bottom: none;
+        }
+
+        .trending-item:hover {
+            transform: translateX(4px);
+        }
+
+        .trending-rank {
+            font-size: 18px;
+            font-weight: 800;
+            color: rgba(221,48,78,0.4);
+            width: 20px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .trending-name {
+            font-size: 13px;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.35;
+        }
+
+        .trending-count {
+            font-size: 11px;
+            color: rgba(255,255,255,0.3);
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        /* Active users */
+        .user-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .user-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 13px;
+            color: rgba(255,255,255,0.75);
+        }
+
+        .user-posts {
+            font-size: 11px;
+            color: rgba(255,255,255,0.3);
+        }
+
+        /* ===== Thread detail panel (slide-in) ===== */
+        .thread-panel {
+            position: fixed;
+            top: 0;
+            right: -640px;
+            width: 600px;
+            height: 100vh;
+            background: #0d0d0d;
+            border-left: 1px solid rgba(255,255,255,0.08);
+            z-index: 200;
+            overflow-y: auto;
+            transition: right 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            padding: 80px 36px 40px;
+        }
+
+        .thread-panel.open {
+            right: 0;
+        }
+
+        .panel-close {
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            font-size: 26px;
+            cursor: pointer;
+            color: rgba(255,255,255,0.4);
+            transition: color 0.2s;
+        }
+
+        .panel-close:hover {
+            color: white;
+        }
+
+        .panel-tag {
+            font-size: 11px;
+            color: #DD304E;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .panel-title {
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 16px;
+        }
+
+        .panel-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .panel-meta-text {
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .panel-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+            margin: 20px 0;
+        }
+
+        .panel-body {
+            font-size: 15px;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.75;
+            margin-bottom: 28px;
+        }
+
+        /* Reply thread */
+        .reply-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .reply {
+            display: flex;
+            gap: 12px;
+        }
+
+        .reply-bubble {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        .reply-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .reply-user {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.75);
+        }
+
+        .reply-time {
+            font-size: 11px;
+            color: rgba(255,255,255,0.25);
+            margin-left: auto;
+        }
+
+        .reply-text {
+            font-size: 13px;
+            color: rgba(255,255,255,0.55);
+            line-height: 1.6;
+        }
+
+        /* Reply input */
+        .reply-input-wrap {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .reply-textarea {
+            flex: 1;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: white;
+            font-size: 14px;
+            font-family: inherit;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s;
+            min-height: 70px;
+        }
+
+        .reply-textarea:focus {
+            border-color: rgba(221,48,78,0.4);
+        }
+
+        .reply-textarea::placeholder {
+            color: rgba(255,255,255,0.25);
+        }
+
+        /* Overlay */
+        .panel-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 150;
+        }
+
+        .panel-overlay.open {
+            display: block;
+        }
+
+        /* online dot */
+        .online-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+            flex-shrink: 0;
+        }
+
+        /* search bar */
+        .search-wrap {
+            position: relative;
+            margin-bottom: 6px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 9px;
+            padding: 9px 14px 9px 36px;
+            color: white;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: rgba(221,48,78,0.4);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.25);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.35;
+        }
+    </style>
+</head>
+
+<body class="surprise-page discussion-page">
+
+    <!-- Side nav (same as surprise.html) -->
+    <div class="side-nav">
+        <a href="index.html" class="logo">
+            <div class="logo-main">CANAL</div>
+            <span class="plus-box"></span>
+            <div class="logo-sub">Asian</div>
+        </a>
+        <div class="divider2"></div>
+        <a href="surprise.html" class="nav-item">Surprise <span class="arrow">></span></a>
+        <a href="discussion.html" class="nav-item active">Discussion <span class="arrow">></span></a>
+        <a href="explore.html" class="nav-item">Explore <span class="arrow">></span></a>
+    </div>
+
+    <!-- Header -->
+    <section class="discussion-header">
+        <h1>Community Discussions</h1>
+        <p>Share thoughts, reactions, and theories with fellow viewers</p>
+    </section>
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+        <div class="tab active" data-tab="all">All</div>
+        <div class="tab" data-tab="reviews">Reviews</div>
+        <div class="tab" data-tab="theories">Theories</div>
+        <div class="tab" data-tab="recommendations">Recommendations</div>
+        <div class="tab" data-tab="culture">Culture</div>
+    </div>
+
+    <!-- Main layout -->
+    <div class="discussion-layout">
+
+        <!-- Thread list -->
+        <div class="thread-list">
+
+            <!-- New post bar -->
+            <div class="new-post-bar">
+                <div class="avatar rose">Y</div>
+                <input class="new-post-input" placeholder="Start a discussion about an Asian drama or film…" id="newPostInput">
+                <button class="post-btn" onclick="handleNewPost()">Post</button>
+            </div>
+
+            <!-- Search -->
+            <div class="search-wrap">
+                <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input class="search-input" placeholder="Search discussions…" id="searchInput" oninput="filterThreads()">
+            </div>
+
+            <!-- Threads -->
+            <div id="threadContainer"></div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <!-- Trending -->
+            <div class="sidebar-card">
+                <div class="sidebar-title">Trending shows</div>
+                <div class="trending-item">
+                    <span class="trending-rank">1</span>
+                    <span class="trending-name">Shine on Me</span>
+                    <span class="trending-count">312 posts</span>
+                </div>
+                <div class="trending-item">
+                    <span class="trending-rank">2</span>
+                    <span class="trending-name">Till the End of the Moon</span>
+                    <span class="trending-count">289 posts</span>
+                </div>
+                <div class="trending-item">
+                    <span class="trending-rank">3</span>
+                    <span class="trending-name">Restart</span>
+                    <span class="trending-count">241 posts</span>
+                </div>
+                <div class="trending-item">
+                    <span class="trending-rank">4</span>
+                    <span class="trending-name">Twenty-Four Strategies</span>
+                    <span class="trending-count">198 posts</span>
+                </div>
+                <div class="trending-item">
+                    <span class="trending-rank">5</span>
+                    <span class="trending-name">Love Between Fairy & Devil</span>
+                    <span class="trending-count">174 posts</span>
+                </div>
+            </div>
+
+            <!-- Active members -->
+            <div class="sidebar-card">
+                <div class="sidebar-title">Active now</div>
+                <div class="user-row">
+                    <div class="avatar sm teal">HL</div>
+                    <div class="user-info">
+                        <div class="user-name">Hannah L.</div>
+                        <div class="user-posts">42 posts this week</div>
+                    </div>
+                    <div class="online-dot"></div>
+                </div>
+                <div class="user-row">
+                    <div class="avatar sm amber">MK</div>
+                    <div class="user-info">
+                        <div class="user-name">Marco K.</div>
+                        <div class="user-posts">38 posts this week</div>
+                    </div>
+                    <div class="online-dot"></div>
+                </div>
+                <div class="user-row">
+                    <div class="avatar sm purple">SY</div>
+                    <div class="user-info">
+                        <div class="user-name">Sara Y.</div>
+                        <div class="user-posts">29 posts this week</div>
+                    </div>
+                    <div class="online-dot"></div>
+                </div>
+                <div class="user-row">
+                    <div class="avatar sm blue">TW</div>
+                    <div class="user-info">
+                        <div class="user-name">Tom W.</div>
+                        <div class="user-posts">21 posts this week</div>
+                    </div>
+                    <div class="online-dot"></div>
+                </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="sidebar-card">
+                <div class="sidebar-title">Browse by tag</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                    <span class="thread-tag" style="cursor:pointer">#romance</span>
+                    <span class="thread-tag" style="cursor:pointer">#historical</span>
+                    <span class="thread-tag" style="cursor:pointer">#fantasy</span>
+                    <span class="thread-tag" style="cursor:pointer">#thriller</span>
+                    <span class="thread-tag" style="cursor:pointer">#slice-of-life</span>
+                    <span class="thread-tag" style="cursor:pointer">#youth</span>
+                    <span class="thread-tag" style="cursor:pointer">#revenge</span>
+                    <span class="thread-tag" style="cursor:pointer">#comedy</span>
+                    <span class="thread-tag" style="cursor:pointer">#c-drama</span>
+                    <span class="thread-tag" style="cursor:pointer">#k-drama</span>
+                </div>
+            </div>
+
+        </aside>
+    </div>
+
+    <!-- Panel overlay -->
+    <div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+
+    <!-- Thread detail panel -->
+    <div class="thread-panel" id="threadPanel">
+        <span class="panel-close" onclick="closePanel()">&times;</span>
+        <div class="panel-tag" id="panelTag"></div>
+        <div class="panel-title" id="panelTitle"></div>
+        <div class="panel-meta">
+            <div class="avatar sm" id="panelAvatar"></div>
+            <span class="panel-meta-text" id="panelMeta"></span>
+        </div>
+        <div class="panel-divider"></div>
+        <div class="panel-body" id="panelBody"></div>
+        <div class="panel-divider"></div>
+        <div class="reply-list" id="replyList"></div>
+        <div class="reply-input-wrap">
+            <div class="avatar sm rose">Y</div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+                <textarea class="reply-textarea" id="replyInput" placeholder="Write a reply…" rows="3"></textarea>
+                <button class="post-btn" style="align-self:flex-end" onclick="submitReply()">Reply</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const threads = [
+        {
+            id: 1,
+            pinned: true,
+            tag: "Reviews",
+            title: "Shine on Me completely changed how I understand love stories in C-dramas",
+            preview: "Usually these shows feel formulaic — but the relationship dynamic here is so different. Lin Yusen doesn't 'win' Nie Xiguang over. They just... grow together. It feels earned in a way most dramas don't.",
+            user: "Hannah L.",
+            avatarClass: "teal",
+            avatarText: "HL",
+            time: "2h ago",
+            likes: 48,
+            replies: 23,
+            body: "Usually these shows feel formulaic — but the relationship dynamic here is so different. Lin Yusen doesn't 'win' Nie Xiguang over. They just... grow together. It feels earned in a way most dramas don't.\n\nI've watched a lot of romance dramas this year and I keep coming back to this one. There's a quiet honesty in how they show affection — no grand gestures that feel out of character, just consistent respect and small moments.\n\nAnyone else feel like the second half was actually stronger than the first? The pacing shift around episode 18 surprised me.",
+            repliesData: [
+                { user: "Marco K.", avatarClass: "amber", avatarText: "MK", time: "1h ago", text: "100% agree on the second half. Ep 20 is genuinely one of the best single episodes I've seen this year." },
+                { user: "Sara Y.", avatarClass: "purple", avatarText: "SY", time: "45min ago", text: "The scene by the lake in ep 22 broke me completely. The restraint in that scene is remarkable." },
+                { user: "Tom W.", avatarClass: "blue", avatarText: "TW", time: "30min ago", text: "I'm only on ep 12 — please no more spoilers 😭 but already fully invested." },
+            ]
+        },
+        {
+            id: 2,
+            tag: "Theories",
+            title: "Theory: the snow motif in Twenty-Four Strategies of Chang'an is non-random — here's my breakdown",
+            preview: "Every major turning point happens on a snowy night. The death of his family, his return, even the dream sequences. I went back and counted — 7 out of 9 pivotal scenes have snow. This has to be intentional.",
+            user: "Sara Y.",
+            avatarClass: "purple",
+            avatarText: "SY",
+            time: "5h ago",
+            likes: 61,
+            replies: 31,
+            body: "Every major turning point happens on a snowy night. The death of his family, his return, even the dream sequences. I went back and counted — 7 out of 9 pivotal scenes have snow. This has to be intentional.\n\nSnow functions almost like a character here. It marks transitions between who he was and who he becomes. There's also a colour contrast pattern — red against white — that mirrors the moral ambiguity the show is about.\n\nI'd love to hear if anyone else noticed this or has a different reading.",
+            repliesData: [
+                { user: "Hannah L.", avatarClass: "teal", avatarText: "HL", time: "4h ago", text: "The red/white contrast is such a good observation. The costume choices follow the same logic — he wears red exactly three times, all before irreversible decisions." },
+                { user: "Leo C.", avatarClass: "rose", avatarText: "LC", time: "3h ago", text: "I noticed this too and wrote about it in a letterboxd review! The cinematographer mentioned in an interview that snow was a deliberate 'emotional marker' in the script." },
+            ]
+        },
+        {
+            id: 3,
+            tag: "Recommendations",
+            title: "If you liked Go to a Place with Wind, these are worth watching next",
+            preview: "That show hit me differently — less about plot, more about a feeling. I've been trying to find something with the same slow, atmospheric quality. Here's what came close.",
+            user: "Tom W.",
+            avatarClass: "blue",
+            avatarText: "TW",
+            time: "8h ago",
+            likes: 34,
+            replies: 17,
+            body: "That show hit me differently — less about plot, more about a feeling. I've been trying to find something with the same slow, atmospheric quality. Here's what came close:\n\n— Nothing But Thirty (30岁的她们) — similar slice-of-life texture, women figuring out adulthood\n— Meet Yourself (去有风的地方's spiritual sibling basically)\n— Ordinary Greatness (普通的世界) — slower, more grounded\n\nAnyone else have suggestions? Looking specifically for dramas that feel like they're set in a place, not just using it as backdrop.",
+            repliesData: [
+                { user: "Sara Y.", avatarClass: "purple", avatarText: "SY", time: "7h ago", text: "River Town and City of Blossoms (繁花) both have that location-as-character quality. City of Blossoms especially — Shanghai in the 90s is practically a lead role." },
+            ]
+        },
+        {
+            id: 4,
+            tag: "Culture",
+            title: "Why does Restart resonate so much in East Asia? Some thoughts on the loop narrative tradition",
+            preview: "Time-loop stories aren't new, but Restart does something specific with the theme of kindness vs. capability. I think it connects to a longer tradition in East Asian storytelling about moral effort.",
+            user: "Marco K.",
+            avatarClass: "amber",
+            avatarText: "MK",
+            time: "1d ago",
+            likes: 89,
+            replies: 44,
+            body: "Time-loop stories aren't new, but Restart does something specific with the theme of kindness vs. capability. I think it connects to a longer tradition in East Asian storytelling about moral effort.\n\nThe show's thesis — 'kindness must be supported by capability' — directly pushes back on the self-sacrificing hero trope common in earlier dramas. The protagonists aren't gifted. They fail repeatedly. But they keep choosing to be decent people.\n\nThat tension between effort and virtue is genuinely different from how Western time-loop stories tend to work (where the loop usually serves the protagonist's self-improvement or cleverness). Curious what others think, especially if you've watched older dramas in this genre.",
+            repliesData: [
+                { user: "Hannah L.", avatarClass: "teal", avatarText: "HL", time: "22h ago", text: "This is a really interesting frame. I'd add that the show also resists the idea of a 'chosen one' — anyone could theoretically be in their position. That de-exceptionalism feels culturally specific too." },
+                { user: "Anna P.", avatarClass: "rose", avatarText: "AP", time: "20h ago", text: "Have you read any academic work on the Chinese time-travel drama genre (穿越剧)? There's quite a bit on the politics of it, particularly around what it means to 'go back' vs. 'repeat.'" },
+                { user: "Marco K.", avatarClass: "amber", avatarText: "MK", time: "18h ago", text: "@Anna — I haven't, would love recommendations. DM me?" },
+            ]
+        },
+        {
+            id: 5,
+            tag: "Reviews",
+            title: "Till the End of the Moon finale discussion — was the ending earned?",
+            preview: "No spoilers in the preview, but I have thoughts. The ending split people I've talked to pretty sharply. I landed somewhere in the middle and want to hear how others read the last 10 minutes.",
+            user: "Leo C.",
+            avatarClass: "rose",
+            avatarText: "LC",
+            time: "2d ago",
+            likes: 115,
+            replies: 67,
+            body: "Spoilers below — you've been warned.\n\nThe ending split people I've talked to pretty sharply. Some felt cheated; others felt it was the only honest conclusion for the story. I landed somewhere in the middle.\n\nWhat I think it got right: the decision not to rewrite the past. The show spent 40 episodes arguing that some costs can't be avoided. An easy fix would've undermined that.\n\nWhat I think it got wrong: the final scene's tone. It felt rushed in a way that didn't match the show's usual patience.\n\nCurious whether the people who loved it unconditionally see something I'm missing, and whether those who hated it feel the same way I do about the middle 10 episodes being the show's peak.",
+            repliesData: [
+                { user: "Sara Y.", avatarClass: "purple", avatarText: "SY", time: "2d ago", text: "I'm in the 'loved it' camp but I hear the rushing argument. I think the final scene was intentionally abrupt — that cut felt like grief, not bad editing." },
+                { user: "Tom W.", avatarClass: "blue", avatarText: "TW", time: "1d ago", text: "The middle section (roughly eps 24–35) is some of the best TV I've seen. The ending honestly didn't ruin that for me even if it stumbled." },
+                { user: "Hannah L.", avatarClass: "teal", avatarText: "HL", time: "1d ago", text: "I watched the ending twice and changed my mind between viewings. First time I thought it was a cop-out; second time it felt inevitable. Rare that a finale does that." },
+            ]
+        },
+    ];
+
+    let currentThread = null;
+
+    function renderThreads(data) {
+        const container = document.getElementById('threadContainer');
+        container.innerHTML = '';
+        data.forEach(t => {
+            const card = document.createElement('div');
+            card.className = 'thread-card' + (t.pinned ? ' pinned' : '');
+            card.innerHTML = `
+                <div class="thread-top">
+                    <div class="avatar sm ${t.avatarClass}">${t.avatarText}</div>
+                    <span class="thread-user">${t.user}</span>
+                    ${t.pinned ? '<span class="pin-badge">Pinned</span>' : ''}
+                    <span class="thread-time">${t.time}</span>
+                </div>
+                <div class="thread-title">${t.title}</div>
+                <div class="thread-preview">${t.preview}</div>
+                <div class="thread-bottom">
+                    <span class="thread-tag">#${t.tag.toLowerCase()}</span>
+                    <span class="thread-stat">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        ${t.replies}
+                    </span>
+                    <span class="thread-stat" id="like-${t.id}" onclick="toggleLike(event, ${t.id})">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        ${t.likes}
+                    </span>
+                </div>
+            `;
+            card.addEventListener('click', () => openPanel(t));
+            container.appendChild(card);
+        });
+    }
+
+    function filterThreads() {
+        const q = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = threads.filter(t =>
+            t.title.toLowerCase().includes(q) ||
+            t.preview.toLowerCase().includes(q) ||
+            t.tag.toLowerCase().includes(q) ||
+            t.user.toLowerCase().includes(q)
+        );
+        renderThreads(filtered);
+    }
+
+    function toggleLike(e, id) {
+        e.stopPropagation();
+        const el = document.getElementById(`like-${id}`);
+        const t = threads.find(x => x.id === id);
+        if (el.classList.contains('liked')) {
+            el.classList.remove('liked');
+            t.likes--;
+        } else {
+            el.classList.add('liked');
+            t.likes++;
+        }
+        el.querySelector('svg').setAttribute('fill', el.classList.contains('liked') ? '#DD304E' : 'none');
+        el.childNodes[el.childNodes.length - 1].textContent = ' ' + t.likes;
+    }
+
+    function openPanel(t) {
+        currentThread = t;
+        document.getElementById('panelTag').textContent = t.tag.toUpperCase();
+        document.getElementById('panelTitle').textContent = t.title;
+        document.getElementById('panelMeta').textContent = t.user + ' · ' + t.time;
+        const av = document.getElementById('panelAvatar');
+        av.className = 'avatar sm ' + t.avatarClass;
+        av.textContent = t.avatarText;
+        document.getElementById('panelBody').textContent = t.body;
+
+        const replyList = document.getElementById('replyList');
+        replyList.innerHTML = '';
+        (t.repliesData || []).forEach(r => {
+            const div = document.createElement('div');
+            div.className = 'reply';
+            div.innerHTML = `
+                <div class="avatar sm ${r.avatarClass}">${r.avatarText}</div>
+                <div class="reply-bubble">
+                    <div class="reply-header">
+                        <span class="reply-user">${r.user}</span>
+                        <span class="reply-time">${r.time}</span>
+                    </div>
+                    <div class="reply-text">${r.text}</div>
+                </div>
+            `;
+            replyList.appendChild(div);
+        });
+
+        document.getElementById('threadPanel').classList.add('open');
+        document.getElementById('panelOverlay').classList.add('open');
+    }
+
+    function closePanel() {
+        document.getElementById('threadPanel').classList.remove('open');
+        document.getElementById('panelOverlay').classList.remove('open');
+    }
+
+    function submitReply() {
+        const input = document.getElementById('replyInput');
+        const text = input.value.trim();
+        if (!text || !currentThread) return;
+
+        const replyList = document.getElementById('replyList');
+        const div = document.createElement('div');
+        div.className = 'reply';
+        div.innerHTML = `
+            <div class="avatar sm rose">Y</div>
+            <div class="reply-bubble">
+                <div class="reply-header">
+                    <span class="reply-user">You</span>
+                    <span class="reply-time">just now</span>
+                </div>
+                <div class="reply-text">${text}</div>
+            </div>
+        `;
+        replyList.appendChild(div);
+        input.value = '';
+        div.scrollIntoView({ behavior: 'smooth' });
+
+        // Update reply count
+        currentThread.replies++;
+        renderThreads(threads);
+    }
+
+    function handleNewPost() {
+        const input = document.getElementById('newPostInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        const newThread = {
+            id: Date.now(),
+            tag: "General",
+            title: text,
+            preview: "Start the conversation…",
+            user: "You",
+            avatarClass: "rose",
+            avatarText: "Y",
+            time: "just now",
+            likes: 0,
+            replies: 0,
+            body: text,
+            repliesData: []
+        };
+
+        threads.unshift(newThread);
+        renderThreads(threads);
+        input.value = '';
+    }
+
+    // Tab filtering
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const filter = tab.dataset.tab;
+            if (filter === 'all') {
+                renderThreads(threads);
+            } else {
+                renderThreads(threads.filter(t => t.tag.toLowerCase() === filter));
+            }
+        });
+    });
+
+    // Init
+    renderThreads(threads);
+    </script>
+</body>
+</html>
