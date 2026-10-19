@@ -168,6 +168,7 @@ body:has(.scene[data-mode="night"]){background:#111829}
 .body p{margin:0;max-width:62ch}
 .lede{font-size:18px}
 .muted{color:var(--ink-soft)}
+.cvpdf{display:block;width:100%;aspect-ratio:595/842;border:1.5px solid var(--ink);border-radius:4px;background:#fff}
 
 .tickets{display:grid;gap:12px}
 .ticket{display:grid;grid-template-columns:72px 1fr;border:1.5px solid var(--ink);border-radius:4px;background:#f7f0e0;overflow:hidden;scroll-margin-top:110px}
@@ -516,21 +517,9 @@ body:has(.scene[data-mode="night"]){background:#111829}
 </template>
 
 <template id="t-cv">
-  <p class="muted">Timetable, latest first.</p>
-  <div class="wrap-x"><table class="tt">
-    <thead><tr><th>When</th><th>Calling at</th><th>Where</th></tr></thead>
-    <tbody>
-      <tr><td>2027</td><td>Accepted presentation, WorldCUR 2027 (forthcoming)</td><td>World Congress on Undergraduate Research</td></tr>
-      <tr><td>2026–27</td><td>Course Representative, BA Digital Media Year 3</td><td>University of Leeds</td></tr>
-      <tr><td>Jul–Aug 2026</td><td>AI Content Growth Intern</td><td>01Agent (Guangzhou Hyperspace Technology)</td></tr>
-      <tr><td>2026</td><td>Oral presentation, ICUR 2026</td><td>Online</td></tr>
-      <tr><td>2025/26</td><td>Student publication, Leeds History Student Times Vol. 2</td><td>University of Leeds</td></tr>
-      <tr><td>2024–27</td><td>BA Digital Media (expected June 2027)</td><td>University of Leeds</td></tr>
-      <tr><td>2022–24</td><td>BA Journalism, two years completed</td><td>Hunan University of Arts and Science</td></tr>
-      <tr><td>2022–24</td><td>Student Journalist, university newspaper and TV station</td><td>Hunan University of Arts and Science</td></tr>
-    </tbody>
-  </table></div>
-  <p><a class="go-cv" href="cv/">Full CV →</a></p>
+  <object class="cvpdf" data="cv/CV_Zifan_Zeng.pdf#toolbar=0&amp;navpanes=0&amp;view=FitH" type="application/pdf" aria-label="Curriculum vitae of Zifan Zeng (PDF)">
+    <p><a class="go-cv" href="cv/CV_Zifan_Zeng.pdf">Open the CV (PDF) →</a></p>
+  </object>
 </template>
 
 <script>
@@ -737,7 +726,7 @@ body:has(.scene[data-mode="night"]){background:#111829}
     works: ['Platform 1 · Calling at', 'Works'],
     about: ['Way out · Station office', 'About'],
     contact: ['Royal Mail · Last post 17:30', 'Contact'],
-    cv: ['Timetable · Valid from 2022', 'CV'],
+    cv: ['Valid from 2022 · One page', 'CV'],
   };
   let current = null, opener = null, hideTimer = 0;
   function fill(key, target) {
