@@ -2,408 +2,830 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Zifan Zeng — Portfolio</title>
 <meta name="description" content="Zifan Zeng — research and digital projects on platforms, algorithms, digital identity and invisible labour.">
+<meta name="theme-color" content="#7a1e25">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400&text=%E6%9B%BE%E5%AD%90%E5%87%A1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;600;700&family=Cabin+Condensed:wght@600;700&family=DM+Mono:wght@400;500&display=swap">
 <style>
+/* Layout: one fixed 16:9 poster scene that covers the viewport (pans sideways on phones); UI pills float on top; content opens in poster-style sheets. */
 :root{
-  --paper:#f3efe9; --paper-2:#ebe5dc; --ink:#24172b; --ink-soft:#5d5262; --line:#d8d0c4;
-  --coral:#c8462c; --gold:#e8c86a; --white:#fff; --plum:#24172b;
-  --serif:"Fraunces",Georgia,serif; --sans:"DM Sans",system-ui,sans-serif;
-  --ease:cubic-bezier(.22,.8,.24,1);
+  --maroon:#7a1e25; --maroon-deep:#5a1419; --cream:#f0e7d3; --ink:#2a2420; --ink-soft:#5d544b; --yellow:#e2c25e;
+  --f-display:"Cabin Condensed","Gill Sans","Gill Sans MT",Calibri,"PingFang SC","Microsoft YaHei",sans-serif;
+  --f-body:"Cabin","Gill Sans","Gill Sans MT",Calibri,"PingFang SC","Microsoft YaHei",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Menlo,monospace;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.65;overflow-x:hidden}
-body.menu-open{overflow:hidden}
-img{display:block;max-width:100%}
-a{color:inherit}
-.wrap{max-width:1240px;margin:0 auto;padding:0 64px}
-.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:#fff;padding:8px 14px;z-index:999}
-.skip:focus{left:8px}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:#b9c3c6;color:var(--ink);font-family:var(--f-body);overflow:hidden}
 
-/* ---------- top bar ---------- */
-.top{position:absolute;top:0;left:0;right:0;z-index:20}
-.top .wrap{display:flex;align-items:center;justify-content:space-between;height:112px;max-width:none;padding:0 48px}
-.mark{display:flex;align-items:center;gap:14px;text-decoration:none}
-.mark .seal{width:52px;height:52px;border-radius:50%;background:var(--coral);color:var(--gold);display:grid;place-items:center;font-family:var(--serif);font-size:21px;letter-spacing:-.02em}
-.mark .words{font-family:var(--serif);font-size:22px;line-height:1.05}
-.mark .words small{display:block;font-family:var(--sans);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;margin-top:5px;color:var(--ink-soft)}
-.dots{position:absolute;top:0;left:50%;width:160px;height:56px;transform:translateX(-50%);
-  background-image:radial-gradient(var(--coral) 1.4px,transparent 1.6px);background-size:12px 12px;
-  -webkit-mask:radial-gradient(ellipse at 50% 0,#000 40%,transparent 72%);mask:radial-gradient(ellipse at 50% 0,#000 40%,transparent 72%);opacity:.8}
-
-.burger{position:fixed;top:30px;right:48px;z-index:60;width:58px;height:58px;border-radius:50%;border:0;background:var(--white);cursor:pointer;
-  box-shadow:0 4px 18px rgba(36,23,43,.08);display:grid;place-items:center;transition:transform .3s var(--ease)}
-.burger:hover{transform:scale(1.06)}
-.burger span{position:absolute;width:24px;height:1.6px;background:var(--coral);transition:transform .35s var(--ease),opacity .2s}
-.burger span:nth-child(1){transform:translateY(-7px)}
-.burger span:nth-child(3){transform:translateY(7px)}
-.menu-open .burger span:nth-child(1){transform:rotate(45deg)}
-.menu-open .burger span:nth-child(2){opacity:0}
-.menu-open .burger span:nth-child(3){transform:rotate(-45deg)}
-
-/* ---------- menu (single panel, drill-down) ---------- */
-.scrim{position:fixed;inset:0;background:rgba(36,23,43,.38);opacity:0;pointer-events:none;transition:opacity .4s var(--ease);z-index:40}
-.menu-open .scrim{opacity:1;pointer-events:auto}
-.menu{position:fixed;top:0;right:0;bottom:0;z-index:50;width:min(480px,100vw);background:var(--white);overflow:hidden;
-  transform:translateX(102%);visibility:hidden;transition:transform .6s var(--ease),visibility 0s .6s,background-color .45s var(--ease)}
-.menu-open .menu{transform:none;visibility:visible;transition:transform .6s var(--ease),visibility 0s,background-color .45s var(--ease)}
-.menu.drill{background:var(--gold)}
-.view{position:absolute;inset:0;overflow-y:auto;padding:116px 56px 48px;transition:transform .5s var(--ease),opacity .35s var(--ease)}
-.view h2{font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.15;margin-bottom:26px}
-.v-main{transform:none}
-.menu.drill .v-main{transform:translateX(-28%);opacity:0;pointer-events:none}
-.v-sub{transform:translateX(100%);opacity:0;pointer-events:none}
-.menu.drill .v-sub{transform:none;opacity:1;pointer-events:auto}
-.view ul{list-style:none}
-.v-main li button,.v-main li a{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;background:none;border:0;font:500 18px/1.3 var(--sans);color:var(--ink);
-  text-align:left;padding:12px 0;cursor:pointer;text-decoration:none}
-.lbl,.sub a .t{background:linear-gradient(currentColor,currentColor) 0 100%/0 1.5px no-repeat;padding-bottom:3px;transition:background-size .35s var(--ease)}
-.v-main li button:hover .lbl,.v-main li a:hover .lbl,.sub a:hover .t,.sub a:focus-visible .t{background-size:100% 1.5px}
-.chev{width:9px;height:9px;border-right:1.6px solid var(--coral);border-top:1.6px solid var(--coral);transform:rotate(45deg);flex:none;margin-right:4px;transition:transform .3s var(--ease)}
-.v-main li button:hover .chev{transform:translateX(4px) rotate(45deg)}
-.v-main hr{border:0;border-top:1px solid var(--line);margin:22px 0}
-.v-main .meta-links a{font-size:15px;font-weight:400;padding:7px 0;justify-content:flex-start}
-.v-main .meta-links i{width:9px;height:9px;border-radius:50%;background:var(--coral);flex:none}
-.v-main .meta-links li:nth-child(2) i{background:var(--gold)}
-.v-main .meta-links li:nth-child(3) i{background:var(--ink)}
-.sub{display:none}
-.sub.on{display:block}
-.sub a{display:block;text-decoration:none;padding:10px 0}
-.sub a .t{font:500 18px/1.3 var(--sans)}
-.sub a .d{display:block;font-size:14px;color:rgba(36,23,43,.66);margin-top:3px;line-height:1.4}
-.back{display:inline-flex;align-items:center;gap:10px;background:none;border:0;font:600 12px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin-bottom:24px;cursor:pointer;padding:6px 0}
-.back .chev{transform:rotate(-135deg);border-color:var(--ink)}
-
-/* ---------- hero ---------- */
-.hero{padding-top:176px}
-.crumb{font-size:13px;color:var(--ink-soft);display:flex;gap:10px;align-items:center;margin-bottom:18px}
-.crumb b{font-weight:500}
-.crumb .sep{width:6px;height:6px;border-right:1.3px solid currentColor;border-top:1.3px solid currentColor;transform:rotate(45deg)}
-.hero-head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:56px;align-items:end}
-h1{font-family:var(--serif);font-weight:400;font-size:clamp(64px,9vw,132px);line-height:.95;letter-spacing:-.02em}
-h1 .zh{display:block;font-family:"Noto Serif SC",var(--serif);font-size:.24em;letter-spacing:.2em;color:var(--ink-soft);margin-top:.5em}
-.hero-bio{padding-bottom:10px}
-.hero-bio p{font-size:18px;line-height:1.6}
-.hero-bio p strong{font-weight:500}
-.hero-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
-.hero-links a{font-size:14px;font-weight:500;text-decoration:none;padding:8px 16px;border-radius:99px;border:1px solid var(--ink);transition:background .25s,color .25s}
-.hero-links a:first-child{background:var(--ink);color:var(--paper)}
-.hero-links a:hover{background:var(--coral);border-color:var(--coral);color:#fff}
-.hero-media{position:relative;margin-top:64px}
-.hero-media::before{content:"";position:absolute;left:-28px;top:28px;width:22px;bottom:28px;
-  background-image:radial-gradient(var(--ink) 1.3px,transparent 1.5px);background-size:11px 13px;opacity:.55}
-.hero-media figure{background:#000;display:flex;justify-content:center;overflow:hidden}
-.hero-media img{width:auto;max-width:100%;max-height:560px;height:auto;opacity:0;transform:scale(1.02);transition:opacity 1.2s var(--ease),transform 1.6s var(--ease)}
-.loaded .hero-media img{opacity:1;transform:none}
-.hero-media figcaption{font-size:13px;color:var(--ink-soft);margin-top:12px}
-
-.intro{display:grid;grid-template-columns:5fr 7fr;gap:64px;padding:88px 0 96px}
-.intro h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,3.2vw,42px);line-height:1.15}
-.intro p+p{margin-top:1em}
-.tlink{display:inline-flex;align-items:center;gap:12px;font-weight:600;font-size:15px;text-decoration:none;margin-top:26px;border-bottom:1.5px solid var(--coral);padding-bottom:4px}
-.tlink .chev{margin-right:0;transition:transform .3s var(--ease)}
-.tlink:hover .chev{transform:translateX(4px) rotate(45deg)}
-
-/* ---------- stacked feature sections ---------- */
-.feature{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;padding:56px 0}
-.feature:nth-of-type(even) .f-media{order:2}
-.f-media{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--paper-2)}
-.f-media img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease)}
-.feature:hover .f-media img{transform:scale(1.035)}
-.f-media.type{display:flex;flex-direction:column;justify-content:flex-end;padding:40px;background:var(--plum);color:var(--paper)}
-.f-media.type .big{font-family:var(--serif);font-size:clamp(34px,3.6vw,52px);line-height:1.05;font-style:italic;color:var(--gold)}
-.f-media.type .small{font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin-top:18px;opacity:.75}
-.eyebrow{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--coral);margin-bottom:14px}
-.feature h3{font-family:var(--serif);font-weight:400;font-size:clamp(30px,3vw,44px);line-height:1.1;margin-bottom:18px}
-.feature p{color:var(--ink-soft);max-width:52ch}
-.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-.tags span{font-size:12.5px;border:1px solid var(--line);border-radius:99px;padding:4px 12px;color:var(--ink-soft)}
-.section-head{display:flex;justify-content:space-between;align-items:end;border-top:1px solid var(--ink);padding-top:22px;margin-top:40px}
-.section-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(36px,4vw,56px);line-height:1}
-.section-head span{font-size:13px;color:var(--ink-soft)}
-
-/* ---------- news band ---------- */
-.band{margin:96px 0;display:grid;grid-template-columns:minmax(0,1fr) 120px}
-.band .inner{background:var(--coral);color:#fff;padding:64px 64px 60px max(64px,calc((100vw - 1240px)/2 + 64px))}
-.band h2{font-family:var(--serif);font-weight:400;font-size:clamp(34px,3.6vw,48px);line-height:1;margin-bottom:28px;display:flex;align-items:center;gap:16px}
-.band h2::before{content:"";width:14px;height:14px;background:var(--gold);transform:rotate(45deg)}
-.news{list-style:none;max-width:860px}
-.news li{display:grid;grid-template-columns:110px 1fr;gap:24px;padding:16px 0;border-top:1px solid rgba(255,255,255,.28)}
-.news time{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;opacity:.85;padding-top:4px}
-.news p{font-family:var(--serif);font-size:clamp(19px,1.8vw,23px);line-height:1.35}
-.news p em{font-style:italic}
-
-/* ---------- tiles ---------- */
-.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;margin-top:36px}
-.tile{position:relative;display:block;text-decoration:none;background:var(--white);overflow:hidden}
-.tile .ti{aspect-ratio:4/3;overflow:hidden;background:var(--paper-2)}
-.tile .ti img{width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
-.tile:hover .ti img{transform:scale(1.05)}
-.tile .tb{padding:22px 24px 26px;border-top:4px solid transparent;transition:border-color .3s,background .3s}
-.tile:hover .tb{border-color:var(--gold)}
-.tile .tb small{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--coral)}
-.tile .tb h4{font-family:var(--serif);font-weight:400;font-size:25px;line-height:1.2;margin:8px 0 6px}
-.tile .tb p{font-size:14.5px;color:var(--ink-soft);line-height:1.5}
-
-.where{padding-top:40px;padding-bottom:120px}
-.where-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:36px}
-.where a{display:flex;flex-direction:column;justify-content:space-between;min-height:220px;padding:30px;text-decoration:none;background:var(--paper-2);transition:background .35s var(--ease),color .35s}
-.where a:nth-child(1):hover{background:var(--gold)}
-.where a:nth-child(2):hover{background:var(--coral);color:#fff}
-.where a:nth-child(3):hover{background:var(--plum);color:var(--paper)}
-.where a:hover .chev{border-color:currentColor;transform:translateX(6px) rotate(45deg)}
-.where .ic{width:40px;height:40px;border-radius:50%;border:1.5px solid currentColor;display:grid;place-items:center;font-family:var(--serif);font-size:18px}
-.where h4{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.1;display:flex;justify-content:space-between;align-items:center}
-.where h4 .chev{transition:transform .3s var(--ease)}
-
-/* ---------- footer ---------- */
-footer{background:var(--plum);color:var(--paper)}
-footer .wrap{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding-top:80px;padding-bottom:40px}
-footer .fm{font-family:var(--serif);font-size:30px;line-height:1.1}
-footer .fm small{display:block;font-family:var(--sans);font-size:14px;opacity:.7;margin-top:12px;max-width:30ch;line-height:1.5}
-footer h5{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;font-weight:600}
-footer ul{list-style:none}
-footer li{margin:6px 0;font-size:15px}
-footer a{text-decoration:none;opacity:.85}
-footer a:hover{opacity:1;text-decoration:underline;text-underline-offset:4px}
-.legal{grid-column:1/-1;border-top:1px solid rgba(243,239,233,.18);padding-top:22px;margin-top:24px;font-size:13px;opacity:.6;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
-
-/* reveal */
-.rv{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
-.rv.in{opacity:1;transform:none}
-
-:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
-
-@media (max-width:980px){
-  .wrap{padding:0 28px}
-  .top .wrap{padding:0 24px;height:96px}
-  .burger{top:20px;right:20px;width:54px;height:54px}
-  .dots{display:none}
-  .intro,.feature{grid-template-columns:1fr;gap:28px}
-  .feature:nth-of-type(even) .f-media{order:0}
-  .tiles,.where-grid{grid-template-columns:1fr 1fr}
-  footer .wrap{grid-template-columns:1fr 1fr}
-  .band{grid-template-columns:1fr 24px}
-  .band .inner{padding:56px 28px}
-  .hero-head{grid-template-columns:1fr;gap:28px}
-  .view{padding:100px 28px 40px}
+/* ---------- scene palette (day / night) ---------- */
+.scene{
+  --sky1:#8c9dae; --sky2:#b9c3c6; --sky3:#e4dfcf;
+  --cloud:#eee8d8; --cloud2:#d2d5cf;
+  --fell-far:#8e9ca6; --fell-mid:#7d8b6a; --hill:#5f6e4b; --tree:#46573c; --tree2:#3a4934;
+  --stone:#b89a6a; --stone-d:#8e7550; --stone-l:#d6c194; --roof:#6d5c58; --roof-d:#574843;
+  --plat:#cfc7b6; --plat-edge:#e6dfcf; --ballast:#6a5c52; --rail:#aaa59c; --sleeper:#4a3f38;
+  --fg:#d8d2c4; --fg-d:#bdb6a6; --glass:#3f4a52; --glass-l:#59656d; --lamp-glass:#e9e6dc;
+  --coach-roof:#55504c; --steam:#f1ece0;
+  --glow:0; --stars:0; --shadow-a:1;
 }
-@media (max-width:640px){
-  body{font-size:16px}
-  .wrap{padding:0 16px}
-  .top .wrap{padding:0 16px}
-  .mark .seal{width:44px;height:44px;font-size:18px}
-  .mark .words{font-size:19px}
-  .burger{right:16px}
-  .hero{padding-top:140px}
-  .hero-media::before{display:none}
-  .hero-media{margin-top:44px}
-  .news li{grid-template-columns:1fr;gap:4px}
-  .intro{padding:56px 0 64px}
-  .tiles,.where-grid{grid-template-columns:1fr}
-  .band .inner{padding:44px 16px}
-  .view{padding:96px 20px 40px}
-  footer .wrap{grid-template-columns:1fr;padding-top:56px}
-  .section-head{flex-direction:column;align-items:flex-start;gap:8px}
+.scene[data-mode="night"]{
+  --sky1:#111829; --sky2:#222c46; --sky3:#4a4b5f;
+  --cloud:#3a4258; --cloud2:#2c3348;
+  --fell-far:#2d3649; --fell-mid:#263027; --hill:#1f2a20; --tree:#18211a; --tree2:#121a14;
+  --stone:#5e5240; --stone-d:#463c2f; --stone-l:#6f614b; --roof:#2e2628; --roof-d:#231d1f;
+  --plat:#5d5a55; --plat-edge:#6d6a64; --ballast:#2e2925; --rail:#77736c; --sleeper:#1f1a17;
+  --fg:#68645d; --fg-d:#57534d; --glass:#f2c46b; --glass-l:#f7d892; --lamp-glass:#ffe1a0;
+  --coach-roof:#2c2928; --steam:#8a8f9e;
+  --glow:1; --stars:1; --shadow-a:.35;
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.rv{opacity:1;transform:none}}
+body:has(.scene[data-mode="night"]){background:#111829}
+
+/* ---------- stage ---------- */
+.stage{position:fixed;inset:0;overflow:hidden}
+.scene{position:absolute;left:50%;top:50%;width:max(100vw,177.78vh);height:max(56.25vw,100vh);transform:translate(-50%,-50%)}
+.scene svg.world{position:absolute;inset:0;width:100%;height:100%;overflow:visible;display:block}
+.scene svg *{transition:fill .9s ease,opacity .9s ease}
+.layer{will-change:transform}
+#shadows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:multiply;
+  opacity:var(--shadow-a);transition:opacity .9s;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 30%,#000 52%);mask-image:linear-gradient(to bottom,transparent 30%,#000 52%)}
+.drift{animation:drift 150s linear infinite}
+@keyframes drift{to{transform:translateX(-1600px)}}
+
+@media (max-aspect-ratio:1/1){
+  .stage{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .stage::-webkit-scrollbar{display:none}
+  .scene{position:relative;left:0;top:0;transform:none;height:100%;width:calc(100dvh * 1.7778)}
+}
+
+/* ---------- hot spots (HTML over the SVG, sized in em = scene scale) ---------- */
+.hots{position:absolute;inset:0;pointer-events:none}
+.hot{position:absolute;pointer-events:auto;background:transparent;border:0;padding:0;cursor:pointer;border-radius:.3em}
+.hot:focus-visible{outline:.15em solid var(--yellow);outline-offset:.2em}
+.tag{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;font:600 .78em/1 var(--f-body);letter-spacing:.06em;
+  background:var(--cream);color:var(--maroon);padding:.38em .62em .32em;border-radius:.2em;box-shadow:0 .12em 0 rgba(0,0,0,.18);
+  transition:transform .25s ease}
+.tag b{font-family:var(--f-display);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-left:.35em}
+.hot:hover .tag,.hot:focus-visible .tag{transform:translateX(-50%) translateY(-.2em)}
+
+/* departure board */
+.board{position:absolute;left:7%;top:27.8%;width:28%;pointer-events:auto;
+  background:#151515;border:.32em solid #2b2b2b;border-radius:.25em;box-shadow:0 .5em 0 rgba(0,0,0,.18);padding:.55em .7em .7em;color:#f3f1ea}
+.board h2{margin:0 0 .45em;display:flex;justify-content:space-between;align-items:baseline;font:700 .95em/1 var(--f-display);letter-spacing:.14em;text-transform:uppercase;color:var(--yellow)}
+.board h2 span{font:500 .8em/1 var(--f-mono);color:#bdb9ad;letter-spacing:.04em}
+.cols,.row{display:grid;grid-template-columns:auto 1fr auto;gap:.5em;align-items:center}
+.cols{font:500 .62em/1 var(--f-mono);color:#8f8b82;letter-spacing:.12em;text-transform:uppercase;padding:0 .2em .45em}
+.row{width:100%;background:transparent;border:0;color:inherit;padding:.18em .2em;cursor:pointer;border-radius:.2em;text-align:left}
+.row:hover,.row:focus-visible{background:transparent;outline:none}
+.c{transition:background .25s ease,color .25s ease}
+.row:hover .c,.row:focus-visible .c{background:var(--cream);color:var(--ink)}
+.row:hover .c::after,.row:focus-visible .c::after{background:rgba(42,36,32,.18)}
+.row:hover .type .c,.row:focus-visible .type .c{background:var(--yellow);color:var(--ink)}
+.row:focus-visible{box-shadow:0 0 0 .12em var(--yellow)}
+.cells{display:flex;gap:.08em}
+.c{display:inline-grid;place-items:center;width:.9em;height:1.25em;background:#232323;border-radius:.1em;position:relative;
+  font:700 1.08em/1 var(--f-display);text-transform:uppercase;color:#f3f1ea}
+.c::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:#0b0b0b}
+.c.flip{animation:flip .055s linear}
+@keyframes flip{0%{transform:scaleY(.15)}100%{transform:scaleY(1)}}
+.type .c{color:var(--yellow)}
+.scene[data-mode="night"] .c{text-shadow:0 0 .35em rgba(255,230,170,.35)}
+
+/* intro train + signal */
+.hot{transition:opacity .4s ease}
+.scene.intro .hot{opacity:0;pointer-events:none}
+.sig-r{fill:#e0473d;transition:fill .3s}.sig-g{fill:#26382c;transition:fill .3s}
+.scene.go .sig-r{fill:#4a1d1a}.scene.go .sig-g{fill:#5fe08a}
+.sig-halo{opacity:0;transition:opacity .3s ease}.scene.go .sig-halo{opacity:1}
+.puff{opacity:0;transform-box:fill-box;transform-origin:center}
+.scene.leaving .puff{animation:puff 1.6s ease-out infinite}
+.scene.leaving .puff:nth-child(2){animation-delay:.5s}.scene.leaving .puff:nth-child(3){animation-delay:1s}
+@keyframes puff{0%{opacity:.85;transform:translate(0,0) scale(.5)}100%{opacity:0;transform:translate(30px,-60px) scale(1.6)}}
+
+/* works drawer: stopping-pattern diagram */
+.route{position:relative;list-style:none;margin:0;padding:0 0 0 60px}
+.route::before{content:"";position:absolute;left:21px;top:30px;bottom:30px;width:6px;border-radius:3px;background:var(--maroon)}
+.stop{position:relative;padding:14px 0 16px;cursor:default;scroll-margin-top:120px}
+.stop+.stop{border-top:1px solid rgba(42,36,32,.14)}
+.stop::before{content:"";position:absolute;left:-48px;top:22px;width:14px;height:14px;border-radius:50%;background:var(--cream);border:4px solid var(--maroon);box-sizing:content-box;transition:background .25s}
+.stop:first-child::before,.stop:last-child::before{border-radius:4px;width:24px;height:10px;left:-53px;top:24px}
+.stop.on::before{background:var(--yellow)}
+.stop .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.stop h4{margin:0;font:700 24px/1.15 var(--f-display);letter-spacing:.02em;text-wrap:balance;transition:color .25s}
+.stop.on h4{color:var(--maroon)}
+.stop time{font:500 13px/1 var(--f-mono);color:var(--ink-soft);font-variant-numeric:tabular-nums;flex:none}
+.stop .meta{font:500 12px/1.4 var(--f-mono);color:var(--maroon);letter-spacing:.06em;text-transform:uppercase;margin:4px 0 6px}
+.stop p{font-size:15px;color:var(--ink-soft)}
+.stop .go,.stop .soon{display:inline-block;margin-top:8px;font:600 14px/1 var(--f-body)}
+.stop .go{color:var(--maroon);text-decoration:none;border-bottom:1.5px solid currentColor;padding-bottom:2px}
+.stop .go:hover{color:var(--ink)}
+.go-cv{color:var(--maroon);font-weight:600;text-decoration:none;border-bottom:1.5px solid currentColor}
+.go-cv:hover{color:var(--ink)}
+.stop .go:focus-visible{outline:2px solid var(--maroon);outline-offset:3px}
+.stop .soon{font:500 12px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);background:rgba(42,36,32,.07);padding:6px 8px;border-radius:3px}
+.tram{position:absolute;left:12px;top:14px;width:24px;height:40px;border-radius:12px 12px 6px 6px;background:var(--ink);
+  box-shadow:0 0 0 3px var(--cream);transition:top .55s cubic-bezier(.22,1,.36,1);pointer-events:none}
+.tram::before{content:"";position:absolute;left:5px;right:5px;top:6px;height:9px;border-radius:5px 5px 2px 2px;background:var(--yellow)}
+.tram::after{content:"";position:absolute;left:5px;right:5px;top:20px;height:12px;border-radius:2px;background:#f3d896;opacity:.85}
+.route-key{display:flex;justify-content:space-between;font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);padding-left:60px}
+
+/* ---------- top UI ---------- */
+.nav{position:fixed;z-index:20;left:0;right:0;top:0;display:flex;justify-content:center;
+  padding-top:calc(14px + env(safe-area-inset-top,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));pointer-events:none}
+.pills{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;pointer-events:auto;background:rgba(240,231,211,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:5px;border-radius:999px;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.pills button{font:600 14px/1 var(--f-body);color:var(--ink);background:transparent;border:0;border-radius:999px;padding:9px 14px;cursor:pointer;letter-spacing:.02em}
+.pills button:hover{background:rgba(122,30,37,.1)}
+.pills button:focus-visible{outline:2px solid var(--maroon);outline-offset:1px}
+.pills .mode{background:var(--maroon);color:var(--cream)}
+.pills .mode:hover{background:var(--maroon-deep)}
+.sep{width:1px;background:rgba(42,36,32,.18);margin:6px 2px}
+
+/* ---------- sheets ---------- */
+.stage{transition:filter .5s ease}
+.stage.dim{filter:brightness(.9) saturate(.9)}
+.veil{position:fixed;inset:0;z-index:30;background:rgba(20,16,14,0);transition:background .5s ease}
+.veil.on{background:rgba(20,16,14,.24)}
+.sheet{position:absolute;top:0;right:0;bottom:0;width:min(600px,100%);overflow:auto;overscroll-behavior:contain;background:var(--cream);color:var(--ink);
+  box-shadow:-24px 0 60px rgba(0,0,0,.22);transform:translateX(40px);opacity:0;
+  transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .4s ease;outline:none}
+.veil.on .sheet{transform:none;opacity:1}
+.body>*{transition:opacity .45s ease,transform .55s cubic-bezier(.22,1,.36,1);opacity:0;transform:translateY(10px)}
+.veil.on .body>*{opacity:1;transform:none}
+.veil.on .body>*:nth-child(2){transition-delay:.06s}
+.veil.on .body>*:nth-child(3){transition-delay:.12s}
+.veil.on .body>*:nth-child(n+4){transition-delay:.18s}
+.body.swap>*{opacity:0!important;transform:translateY(6px)!important;transition-delay:0s!important;transition-duration:.18s!important}
+.sheet header{position:sticky;top:0;z-index:1;background:var(--maroon);color:var(--cream);padding:calc(22px + env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) 18px 28px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.sheet header small{display:block;font:500 12px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-bottom:8px}
+.sheet h3{margin:0;font:700 clamp(28px,5vw,40px)/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;text-wrap:balance}
+.close{flex:none;font:600 14px/1 var(--f-body);background:var(--cream);color:var(--maroon);border:0;border-radius:999px;padding:9px 14px;cursor:pointer}
+.close:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+.body{padding:26px max(24px,env(safe-area-inset-right,0px)) calc(32px + env(safe-area-inset-bottom,0px)) 28px;display:grid;gap:18px;font-size:16px;line-height:1.6}
+.body p{margin:0;max-width:62ch}
+.lede{font-size:18px}
+.muted{color:var(--ink-soft)}
+
+.tickets{display:grid;gap:12px}
+.ticket{display:grid;grid-template-columns:72px 1fr;border:1.5px solid var(--ink);border-radius:4px;background:#f7f0e0;overflow:hidden;scroll-margin-top:110px}
+.ticket .stub{background:var(--ink);color:var(--cream);display:grid;place-items:center;padding:10px 6px;font:500 13px/1.2 var(--f-mono);text-align:center;border-right:1.5px dashed var(--cream)}
+.ticket .stub b{display:block;font:700 22px/1 var(--f-display);color:var(--yellow);margin-bottom:4px}
+.ticket .info{padding:12px 16px;min-width:0}
+.ticket h4{margin:0 0 4px;font:700 20px/1.15 var(--f-display);letter-spacing:.03em}
+.ticket .meta{font:500 12px/1.4 var(--f-mono);color:var(--maroon);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.ticket p{font-size:15px}
+.ticket.hl{box-shadow:0 0 0 3px var(--yellow)}
+
+.tt{width:100%;border-collapse:collapse;font-size:15px}
+.tt th{text-align:left;font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);padding:0 10px 10px 0;border-bottom:2px solid var(--ink)}
+.tt td{padding:11px 10px 11px 0;border-bottom:1px solid rgba(42,36,32,.18);vertical-align:top}
+.tt td:first-child{font:500 13px/1.5 var(--f-mono);white-space:nowrap;color:var(--maroon);font-variant-numeric:tabular-nums}
+.tt td:last-child{color:var(--ink-soft)}
+.wrap-x{overflow-x:auto}
+
+.mail{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.mail code{font:500 18px/1.2 var(--f-mono);background:#f7f0e0;border:1.5px solid var(--ink);padding:10px 14px;border-radius:4px;user-select:all;word-break:break-all}
+.btn{font:600 15px/1 var(--f-body);background:var(--maroon);color:var(--cream);border:0;border-radius:999px;padding:12px 18px;cursor:pointer}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.note{font:500 12px/1.5 var(--f-mono);color:var(--ink-soft)}
+
+@media (max-width:520px){
+  .ticket{grid-template-columns:58px 1fr}
+  .pills button{padding:7px 8px;font-size:12.5px}
+  .sep{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .drift,.puff{animation:none!important}
+  .tram{transition:none}
+  .veil,.sheet,.body>*,.stage{transition:none!important}
+}
 </style>
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
+<div class="stage" id="stage">
+  <div class="scene" id="scene" data-mode="day">
+    <svg class="world" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" style="stop-color:var(--sky1)"/>
+          <stop offset=".55" style="stop-color:var(--sky2)"/>
+          <stop offset="1" style="stop-color:var(--sky3)"/>
+        </linearGradient>
+        <radialGradient id="glow">
+          <stop offset="0" stop-color="#ffd98a" stop-opacity=".75"/>
+          <stop offset=".45" stop-color="#ffc861" stop-opacity=".22"/>
+          <stop offset="1" stop-color="#ffc861" stop-opacity="0"/>
+        </radialGradient>
+        <!-- arched sash window pair -->
+        <g id="win">
+          <path d="M0 0 h86 v126 h-86 z" style="fill:var(--stone-l)"/>
+          <path d="M10 118 v-82 a15 15 0 0 1 30 0 v82 z" style="fill:var(--glass)"/>
+          <path d="M46 118 v-82 a15 15 0 0 1 30 0 v82 z" style="fill:var(--glass)"/>
+          <path d="M14 70 h22 M50 70 h22" style="stroke:var(--stone-l)" stroke-width="3"/>
+          <rect x="-6" y="126" width="98" height="10" style="fill:var(--stone-l)"/>
+        </g>
+        <!-- lamp post -->
+        <g id="lamp">
+          <circle cx="0" cy="-238" r="70" fill="url(#glow)" style="opacity:var(--glow)"/>
+          <rect x="-4" y="-215" width="8" height="215" style="fill:var(--maroon)"/>
+          <rect x="-9" y="-20" width="18" height="20" style="fill:var(--maroon-deep)"/>
+          <path d="M-18 -215 h36 l-4 -36 h-28 z" style="fill:var(--lamp-glass)"/>
+          <path d="M-22 -251 h44 l-22 -16 z" style="fill:var(--maroon-deep)"/>
+          <path d="M-16 -215 h32 v6 h-32z" style="fill:var(--maroon-deep)"/>
+          <circle cx="0" cy="-271" r="4" style="fill:var(--maroon-deep)"/>
+        </g>
+        <!-- bench -->
+        <g id="bench">
+          <rect x="0" y="0" width="110" height="10" rx="2" style="fill:var(--stone-l)"/>
+          <rect x="0" y="16" width="110" height="7" rx="2" style="fill:var(--stone-l)"/>
+          <rect x="0" y="30" width="110" height="9" rx="2" style="fill:var(--stone-l)"/>
+          <path d="M8 -2 v54 M102 -2 v54 M8 39 l-6 14 M102 39 l6 14" stroke="#2c2622" stroke-width="7" stroke-linecap="round"/>
+        </g>
+        <g id="wild">
+          <path d="M-14 0 q-2 -14 -6 -24 M-4 0 q0 -16 2 -30 M6 0 q3 -12 8 -20 M14 0 q1 -10 -1 -16 M-22 0 q-4 -8 -10 -12" fill="none" stroke="#5b7a3a" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M-8 -6 q-6 -8 -12 -6 M8 -4 q8 -6 12 -2" fill="none" stroke="#5b7a3a" stroke-width="2.6" stroke-linecap="round"/>
+          <g fill="#f4efe2"><circle cx="-23" cy="-26" r="3.2"/><circle cx="-17" cy="-26" r="3.2"/><circle cx="-20" cy="-30" r="3.2"/><circle cx="-20" cy="-22" r="3.2"/></g>
+          <circle cx="-20" cy="-26" r="2" fill="#e2b93f"/>
+          <circle cx="-2" cy="-32" r="4" fill="#e2b93f"/><circle cx="-2" cy="-32" r="1.6" fill="#a86f1f"/>
+          <circle cx="14" cy="-22" r="3.4" fill="#c97aa8"/><circle cx="13" cy="-17" r="2.6" fill="#9a6bb3"/>
+          <circle cx="-32" cy="-13" r="2.8" fill="#e2b93f"/>
+        </g>
+      </defs>
 
-<header class="top">
-  <div class="dots" aria-hidden="true"></div>
-  <div class="wrap">
+      <!-- sky -->
+      <g class="layer" data-depth="0">
+        <rect x="-300" y="-200" width="2200" height="1200" fill="url(#sky)"/>
+        <g style="opacity:var(--stars)" fill="#f4ecd6">
+          <circle cx="120" cy="70" r="1.6"/><circle cx="260" cy="140" r="1.2"/><circle cx="410" cy="60" r="1.8"/><circle cx="560" cy="180" r="1.1"/>
+          <circle cx="700" cy="90" r="1.5"/><circle cx="860" cy="40" r="1.2"/><circle cx="1010" cy="130" r="1.7"/><circle cx="1180" cy="70" r="1.3"/>
+          <circle cx="1320" cy="160" r="1.1"/><circle cx="1460" cy="50" r="1.6"/><circle cx="1540" cy="200" r="1.2"/><circle cx="330" cy="230" r="1"/>
+          <circle cx="1240" cy="18" r="22" fill="#efe3c2"/>
+        </g>
+      </g>
+      <!-- clouds: poster bands, drawn twice for a seamless drift -->
+      <g class="layer" data-depth="0.15">
+        <g class="drift">
+          <g id="cloudset">
+            <path d="M-40 150 q120 -70 260 -20 q90 -50 210 0 q80 -20 140 20 z" style="fill:var(--cloud)"/>
+            <path d="M380 250 q140 -55 300 -10 q100 -40 220 10 z" style="fill:var(--cloud2)"/>
+            <path d="M820 120 q160 -80 330 -12 q110 -45 230 8 q70 -10 120 4 z" style="fill:var(--cloud)"/>
+            <path d="M1180 270 q120 -40 260 -6 q70 -26 200 6 z" style="fill:var(--cloud2)"/>
+            <path d="M120 320 q140 -30 300 -4 h-300z" style="fill:var(--cloud2)"/>
+          </g>
+          <use href="#cloudset" x="1600"/>
+        </g>
+      </g>
+      <!-- fells -->
+      <g class="layer" data-depth="0.35">
+        <path d="M-200 520 L-200 430 Q 80 360 300 410 Q 520 350 760 400 Q 980 330 1220 395 Q 1460 350 1800 420 L1800 520 Z" style="fill:var(--fell-far)"/>
+      </g>
+      <g class="layer" data-depth="0.55">
+        <path d="M-200 560 L-200 470 Q 120 420 380 470 Q 640 430 880 468 Q 1100 440 1300 470 Q 1560 440 1800 480 L1800 560 Z" style="fill:var(--fell-mid)"/>
+        <path d="M-200 470 Q 120 420 380 470" fill="none" stroke="#000" stroke-opacity=".06" stroke-width="10"/>
+        <g stroke-width="2" style="stroke:var(--hill)" opacity=".5">
+          <path d="M120 470 L 240 500 M 300 476 L 450 505 M 700 460 L 820 492" fill="none"/>
+        </g>
+      </g>
+      <!-- trees -->
+      <g class="layer" data-depth="0.75">
+        <g style="fill:var(--tree)">
+          <ellipse cx="40" cy="520" rx="90" ry="60"/><ellipse cx="190" cy="510" rx="70" ry="70"/><ellipse cx="320" cy="525" rx="80" ry="52"/>
+          <ellipse cx="560" cy="530" rx="70" ry="44"/><ellipse cx="700" cy="520" rx="60" ry="56"/><ellipse cx="860" cy="535" rx="80" ry="40"/>
+        </g>
+        <g style="fill:var(--tree2)">
+          <ellipse cx="120" cy="545" rx="70" ry="38"/><ellipse cx="430" cy="545" rx="90" ry="34"/><ellipse cx="770" cy="548" rx="70" ry="30"/>
+          <path d="M600 548 q0 -90 22 -130 q22 40 22 130z"/>
+        </g>
+        <!-- chimneys of the town beyond -->
+        <g style="fill:var(--stone-d)"><rect x="470" y="470" width="80" height="60"/><rect x="480" y="454" width="10" height="16"/><rect x="530" y="458" width="10" height="12"/></g>
+        <path d="M466 470 l44 -26 l44 26z" style="fill:var(--roof)"/>
+      </g>
+
+      <!-- far platform + station -->
+      <g class="layer" data-depth="1">
+        <!-- platform -->
+        <rect x="-200" y="556" width="2000" height="16" style="fill:var(--plat-edge)"/>
+        <rect x="-200" y="566" width="2000" height="8" style="fill:var(--plat)"/>
+        <rect x="-200" y="574" width="2000" height="96" style="fill:var(--stone-d)"/>
+        <g style="stroke:var(--stone)" stroke-width="2" opacity=".55" fill="none">
+          <path d="M-200 598 H1800 M-200 622 H1800 M-200 646 H1800"/>
+          <path d="M-160 574 v24 M-60 598 v24 M40 574 v24 M140 598 v24 M240 574 v24 M340 598 v24 M440 574 v24 M540 598 v24 M640 574 v24 M740 598 v24 M840 574 v24 M940 598 v24 M1040 574 v24 M1140 598 v24 M1240 574 v24 M1340 598 v24 M1440 574 v24 M1540 598 v24 M1640 574 v24
+                   M-110 622 v24 M-10 646 v24 M90 622 v24 M190 646 v24 M290 622 v24 M390 646 v24 M490 622 v24 M590 646 v24 M690 622 v24 M790 646 v24 M890 622 v24 M990 646 v24 M1090 622 v24 M1190 646 v24 M1290 622 v24 M1390 646 v24 M1490 622 v24 M1590 646 v24"/>
+        </g>
+        <!-- wildflowers in the verge behind the wall -->
+        <g>
+          <use href="#wild" transform="translate(38 544) scale(0.8 0.8)"/>
+          <use href="#wild" transform="translate(96 541) scale(-1.05 1.05)"/>
+          <use href="#wild" transform="translate(131 546) scale(0.7 0.7)"/>
+          <use href="#wild" transform="translate(214 543) scale(0.95 0.95)"/>
+          <use href="#wild" transform="translate(262 545) scale(-0.75 0.75)"/>
+          <use href="#wild" transform="translate(318 540) scale(1.1 1.1)"/>
+          <use href="#wild" transform="translate(352 546) scale(-0.65 0.65)"/>
+          <use href="#wild" transform="translate(421 542) scale(-0.9 0.9)"/>
+          <use href="#wild" transform="translate(447 545) scale(0.7 0.7)"/>
+          <use href="#wild" transform="translate(508 541) scale(1 1)"/>
+          <use href="#wild" transform="translate(544 546) scale(-0.72 0.72)"/>
+          <use href="#wild" transform="translate(-20 546) scale(-0.9 0.9)"/>
+        </g>
+        <!-- white-painted garden wall like Settle -->
+        <path d="M-200 540 H 1000 V 556 H -200z" fill="#e7e3d8" opacity=".9"/>
+        
+
+        <!-- departure board legs (board itself is HTML) -->
+        <rect x="190" y="440" width="12" height="120" fill="#2b2b2b"/><rect x="470" y="440" width="12" height="120" fill="#2b2b2b"/>
+
+
+
+        <use href="#lamp" x="600" y="560"/>
+
+        <!-- nameboard -->
+        <rect x="694" y="420" width="10" height="140" style="fill:var(--maroon-deep)"/>
+        <rect x="906" y="420" width="10" height="140" style="fill:var(--maroon-deep)"/>
+        <rect x="660" y="364" width="290" height="78" rx="4" style="fill:var(--maroon)"/>
+        <rect x="668" y="372" width="274" height="62" rx="2" fill="none" style="stroke:var(--cream)" stroke-width="2.5"/>
+        <text x="805" y="417" text-anchor="middle" font-family="Cabin Condensed, Gill Sans, sans-serif" font-weight="700" font-size="42" letter-spacing="5" textLength="244" lengthAdjust="spacingAndGlyphs" style="fill:var(--cream)">ZIFAN ZENG</text>
+        <use href="#bench" x="745" y="508"/>
+
+        <!-- postbox -->
+        <g>
+          <rect x="968" y="474" width="48" height="86" rx="6" fill="#b3201f"/>
+          <path d="M964 478 a28 22 0 0 1 56 0z" fill="#b3201f"/>
+          <rect x="962" y="476" width="60" height="9" rx="3" fill="#8e1817"/>
+          <rect x="978" y="494" width="28" height="5" rx="2" fill="#2a1414"/>
+          <rect x="980" y="510" width="24" height="14" rx="2" fill="#f2e9d3"/>
+          <rect x="964" y="552" width="56" height="8" fill="#8e1817"/>
+        </g>
+
+        <!-- station building -->
+        <path d="M1028 346 L1078 250 H1800 V346 Z" style="fill:var(--roof)"/>
+        <g style="stroke:var(--roof-d)" stroke-width="2" opacity=".7">
+          <path d="M1072 262 H1800 M1062 282 H1800 M1052 302 H1800 M1041 322 H1800"/>
+        </g>
+        <rect x="1022" y="342" width="800" height="10" style="fill:var(--roof-d)"/>
+        <rect x="1040" y="352" width="780" height="208" style="fill:var(--stone)"/>
+        <g style="stroke:var(--stone-d)" stroke-width="1.6" opacity=".55">
+          <path d="M1040 380 H1820 M1040 408 H1820 M1040 436 H1820 M1040 464 H1820 M1040 492 H1820 M1040 520 H1820"/>
+        </g>
+        <rect x="1040" y="352" width="18" height="208" style="fill:var(--stone-l)"/>
+        <!-- downpipe -->
+        <rect x="1066" y="352" width="6" height="208" fill="#2a2422"/>
+        <use href="#win" x="1094" y="404"/>
+        <use href="#win" x="1210" y="404"/>
+        <use href="#win" x="1520" y="404"/>
+        <!-- timetable poster (CV) -->
+        <rect x="1314" y="414" width="62" height="92" style="fill:var(--maroon-deep)"/>
+        <rect x="1319" y="419" width="52" height="82" fill="#f2ead6"/>
+        <g fill="#7a1e25"><rect x="1324" y="425" width="42" height="8"/></g>
+        <g fill="#4b423b"><rect x="1324" y="440" width="34" height="3"/><rect x="1324" y="448" width="40" height="3"/><rect x="1324" y="456" width="30" height="3"/><rect x="1324" y="464" width="38" height="3"/><rect x="1324" y="472" width="28" height="3"/><rect x="1324" y="480" width="36" height="3"/><rect x="1324" y="488" width="24" height="3"/></g>
+        <!-- door (About) -->
+        <rect x="1398" y="404" width="92" height="156" style="fill:var(--stone-l)"/>
+        <rect x="1410" y="416" width="68" height="144" fill="#1d1513"/>
+        <g id="door"><rect x="1410" y="416" width="68" height="144" style="fill:var(--maroon)"/>
+          <rect x="1418" y="426" width="22" height="56" fill="none" stroke="#5a1419" stroke-width="3"/><rect x="1448" y="426" width="22" height="56" fill="none" stroke="#5a1419" stroke-width="3"/>
+          <rect x="1418" y="494" width="22" height="56" fill="none" stroke="#5a1419" stroke-width="3"/><rect x="1448" y="494" width="22" height="56" fill="none" stroke="#5a1419" stroke-width="3"/>
+          <circle cx="1470" cy="490" r="3" fill="#d9c27a"/></g>
+        <!-- way out sign -->
+        <rect x="1392" y="374" width="104" height="22" rx="2" fill="#1f4f8f"/>
+        <text x="1444" y="390" text-anchor="middle" font-family="Cabin, sans-serif" font-weight="700" font-size="14" fill="#ffffff" letter-spacing="1.5">↑ ABOUT</text>
+        <!-- flower tubs -->
+        <path d="M1500 532 h34 l-5 28 h-24z" style="fill:var(--maroon)"/><ellipse cx="1517" cy="530" rx="22" ry="9" fill="#5b7a3a"/>
+        <path d="M1272 532 h34 l-5 28 h-24z" style="fill:var(--maroon)"/><ellipse cx="1289" cy="530" rx="22" ry="9" fill="#5b7a3a"/>
+        <circle cx="1281" cy="526" r="4" fill="#d9537a"/><circle cx="1295" cy="524" r="4" fill="#efd25a"/><circle cx="1510" cy="526" r="4" fill="#efd25a"/><circle cx="1524" cy="527" r="4" fill="#d9537a"/>
+      </g>
+
+      <!-- track -->
+      <g class="layer" data-depth="1.3">
+        <rect x="-300" y="668" width="2200" height="140" style="fill:var(--ballast)"/>
+        <g style="fill:var(--sleeper)" id="sleepers"></g>
+        <rect x="-300" y="708" width="2200" height="7" style="fill:var(--rail)"/>
+        <rect x="-300" y="752" width="2200" height="8" style="fill:var(--rail)"/>
+        <rect x="-300" y="714" width="2200" height="3" fill="#000" opacity=".25"/>
+        <rect x="-300" y="759" width="2200" height="3" fill="#000" opacity=".25"/>
+      </g>
+
+      <!-- heritage train: parked on load, departs once -->
+      <g id="train" transform="translate(126 604)"><g id="train-move"></g></g>
+
+      <!-- near platform -->
+      <g class="layer" data-depth="1.8">
+        <path d="M-300 820 L1900 790 V1100 H-300z" style="fill:var(--fg)"/>
+        <path d="M-300 820 L1900 790 V806 L-300 836z" style="fill:var(--fg-d)"/>
+        <path d="M-300 858 L1900 826 V870 L-300 904z" fill="#e2c25e"/>
+        <g fill="#000" opacity=".08" id="dots"></g>
+        <!-- colour-light signal -->
+        <g>
+          <rect x="1543" y="640" width="10" height="170" fill="#2b2b2b"/>
+          <rect x="1528" y="586" width="40" height="78" rx="8" fill="#1b1b1b"/>
+          <circle class="sig-halo" cx="1548" cy="645" r="20" fill="#5fe08a" fill-opacity=".28"/>
+          <circle class="sig-r" cx="1548" cy="606" r="10"/>
+          <circle class="sig-g" cx="1548" cy="645" r="10"/>
+          <path d="M1532 596 h32 M1532 635 h32" stroke="#1b1b1b" stroke-width="5"/>
+        </g>
+      </g>
+    </svg>
+
+    <canvas id="shadows"></canvas>
+
+    <!-- interactive layer, moves with the station -->
+    <div class="hots" id="hots">
+      <section class="board" aria-label="Departures: works">
+        <h2>Departures <span id="clock">--:--</span></h2>
+        <div class="cols"><span>Year</span><span>Work</span><span>Type</span></div>
+        <div id="rows"></div>
+      </section>
+      <button class="hot" style="left:87%;top:41.4%;width:6.5%;height:20.9%" data-open="about" aria-label="Open about"></button>
+      <button class="hot" style="left:60.2%;top:51.4%;width:3.3%;height:10.9%" data-open="contact" aria-label="Open contact">
+        <span class="tag" style="top:104%"><b style="margin:0">Contact</b></span>
+      </button>
+      <button class="hot" style="left:82%;top:45.8%;width:4%;height:10.6%" data-open="cv" aria-label="Open CV">
+        <span class="tag" style="top:104%"><b style="margin:0">CV</b></span>
+      </button>
+    </div>
   </div>
-</header>
+</div>
 
-<button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
-<div class="scrim" id="scrim"></div>
-
-<nav class="menu" id="menu" aria-label="Site menu">
-  <div class="view v-main">
-    <h2>Menu</h2>
-    <ul>
-      <li><button data-sub="about"><span class="lbl">About</span><i class="chev"></i></button></li>
-      <li><button data-sub="research"><span class="lbl">Research</span><i class="chev"></i></button></li>
-      <li><button data-sub="projects"><span class="lbl">Digital Projects</span><i class="chev"></i></button></li>
-      <li><button data-sub="design"><span class="lbl">Design &amp; Motion</span><i class="chev"></i></button></li>
-      <li><button data-sub="writing"><span class="lbl">Writing &amp; Talks</span><i class="chev"></i></button></li>
-    </ul>
-    <hr>
-    <ul class="meta-links">
-      <li><a href="cv/"><i></i><span class="lbl">CV</span></a></li>
-      <li><a href="https://github.com/zifan118"><i></i><span class="lbl">GitHub</span></a></li>
-      <li><a href="mailto:zengzifan2024@163.com"><i></i><span class="lbl">Contact</span></a></li>
-    </ul>
-  </div>
-
-  <div class="view v-sub" aria-hidden="true">
-    <button class="back" id="back"><i class="chev"></i>Menu</button>
-
-    <div class="sub" data-name="about">
-      <h2>About</h2>
-      <a href="#about"><span class="t">About me</span></a>
-      <a href="#research"><span class="t">Research interests</span><span class="d">Platforms, digital identity, invisible labour</span></a>
-      <a href="cv/"><span class="t">CV</span></a>
-      <a href="mailto:zengzifan2024@163.com"><span class="t">Get in touch</span></a>
-    </div>
-
-    <div class="sub" data-name="research">
-      <h2>Research</h2>
-      <a href="#research"><span class="t">Overview</span></a>
-      <a href="projects/authority-without-authorship/"><span class="t">Authority Without Authorship</span><span class="d">AI-product marketing &amp; invisible judgment · WorldCUR 2027</span></a>
-      <a href="projects/algorithmic-paralysis/"><span class="t">Algorithmic Paralysis</span><span class="d">Choice and discovery on streaming platforms · ICUR 2026</span></a>
-      <a href="projects/bbc-tiktok/"><span class="t">Gendered Labour in BBC News TikTok</span><span class="d">Multimodal content analysis design</span></a>
-    </div>
-
-    <div class="sub" data-name="projects">
-      <h2>Digital Projects</h2>
-      <a href="#projects"><span class="t">All projects</span></a>
-      <a href="projects/canal-asian/"><span class="t">Canal+ Asian</span><span class="d">Streaming concept · project lead</span></a>
-      <a href="projects/digital-mirror/"><span class="t">Digital Mirror</span><span class="d">Research website &amp; podcast</span></a>
-      <a href="projects/sad-community/"><span class="t">Harborly</span><span class="d">Social anxiety community site · PHP &amp; MySQL</span></a>
-    </div>
-
-    <div class="sub" data-name="design">
-      <h2>Design &amp; Motion</h2>
-      <a href="#projects"><span class="t">Overview</span></a>
-      <a href="projects/food-aid-redesign/"><span class="t">Leeds Food Aid Network Redesign</span><span class="d">User research &amp; interface design</span></a>
-    </div>
-
-    <div class="sub" data-name="writing">
-      <h2>Writing &amp; Talks</h2>
-      <a href="projects/event-to-condition/"><span class="t">From Event to Condition</span><span class="d">The History Student Times</span></a>
-      <a href="projects/algorithmic-paralysis/"><span class="t">ICUR 2026 talk</span><span class="d">Algorithmic Paralysis</span></a>
-      <a href="projects/authority-without-authorship/"><span class="t">WorldCUR 2027 paper</span><span class="d">Authority Without Authorship</span></a>
-    </div>
+<nav class="nav" aria-label="Main">
+  <div class="pills">
+    <button data-open="works">Works</button>
+    <button data-open="about">About</button>
+    <button data-open="contact">Contact</button>
+    <button data-open="cv">CV</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="mode" id="mode" aria-pressed="false">Night</button>
   </div>
 </nav>
 
-<main id="main">
-  <section class="hero wrap">
-    <div class="hero-head">
-      <h1>Zifan<br>Zeng</h1>
-      <div class="hero-bio">
-        <p><strong>Final-year BA Digital Media student</strong> at the University of Leeds. I research platforms, algorithms and digital identity, with a focus on the labour that digital products keep out of view.</p>
-        <div class="hero-links">
-          <a href="cv/">CV</a>
-          <a href="https://github.com/zifan118">GitHub</a>
-        </div>
-      </div>
-    </div>
-  </section>
+<!-- sheets -->
+<div class="veil" id="veil" hidden>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1">
+    <header><div><small id="sheet-kicker"></small><h3 id="sheet-title"></h3></div><button class="close" id="close">Close</button></header>
+    <div class="body" id="sheet-body"></div>
+  </div>
+</div>
 
-  <section class="wrap intro" id="about">
-    <h2 class="rv">I research what platforms make visible, and what they quietly leave out.</h2>
-    <div class="rv">
-      <p>My work looks at how recommendation systems shape choice, how people perform identity across platforms, and how the human labour behind digital products is hidden from view.</p>
-      <p>I work across written research and making: content analysis and research design on one side, websites, prototypes and motion on the other. This portfolio gathers both.</p>
-      <a class="tlink" href="cv/">View my CV <i class="chev"></i></a>
-    </div>
-  </section>
+<template id="t-works">
+  <p class="muted">This train calls at every project, newest first. Hover a stop to move the train.</p>
+  <div class="route-key"><span>Stop</span><span>Year</span></div>
+  <ol class="route" id="route">
+    <li class="stop" id="w-labour" tabindex="0"><div class="top"><h4>Authority Without Authorship</h4><time>26/27</time></div><div class="meta">Accepted presentation · WorldCUR 2027</div>
+      <p>How AI vendors’ marketing sells cost savings while leaving operators’ repeated testing and selection uncounted. Proposes self-produced invisibility as a possible third mechanism of invisible labour. The study grew out of my 01Agent internship.</p>
+      <a class="go" href="projects/authority-without-authorship/">Read more →</a></li>
+    <li class="stop" id="w-icur" tabindex="0"><div class="top"><h4>Algorithmic Paralysis</h4><time>2026</time></div><div class="meta">Oral presentation, online · ICUR 2026</div>
+      <p>Rethinking choice and discovery on streaming platforms. Argues that streaming interfaces keep users browsing while deferring the moment of choice, using a walkthrough analysis of Netflix and TikTok.</p>
+      <a class="go" href="projects/algorithmic-paralysis/">Read more →</a></li>
+    <li class="stop" id="w-map" tabindex="0"><div class="top"><h4>Map Photo Album</h4><time>2026</time></div><div class="meta">Personal project · Desktop app</div>
+      <p>An offline desktop photo archive in which visited cities and countries open into location-based photographs and music.</p>
+      <span class="soon">Video demo coming soon</span></li>
+    <li class="stop" id="w-canal" tabindex="0"><div class="top"><h4>Canal+ Asian</h4><time>25/26</time></div><div class="meta">Team project lead · D&amp;AD New Blood brief</div>
+      <p>A streaming platform for Asian film and TV that replaces algorithmic recommendation with three user-chosen entry points: Being Surprised, Joining Discussions and Exploring Stories. I ran the survey, interviews and user testing, built the front end and led the pitch. It later became the basis of my ICUR 2026 paper.</p>
+      <a class="go" href="projects/canal-asian/">Read more →</a></li>
+    <li class="stop" id="w-sad" tabindex="0"><div class="top"><h4>Harborly</h4><time>25/26</time></div><div class="meta">Social anxiety community site · PHP · MySQL</div>
+      <p>A support website for people with social anxiety. I cleaned a data.gov.uk dataset into MySQL, queried it with PHP and visualised it with Chart.js.</p>
+      <a class="go" href="projects/sad-community/">Read more →</a></li>
+    <li class="stop" id="w-bbc" tabindex="0"><div class="top"><h4>Gendered Labour in BBC News TikTok</h4><time>25/26</time></div><div class="meta">Research design · Multimodal content analysis</div>
+      <p>A multimodal content analysis design for how @BBCNews constructs gendered divisions of labour in its TikTok videos, where video, captions and graphics work together to make meaning.</p>
+      <a class="go" href="projects/bbc-tiktok/">Read more →</a></li>
+    <li class="stop" id="w-mirror" tabindex="0"><div class="top"><h4>Digital Mirror</h4><time>25/26</time></div><div class="meta">Research website · Podcast</div>
+      <p>A research website of observation logs on my own platform life, made alongside a co-produced podcast comparing Justin Bieber’s identity work on TikTok and Instagram.</p>
+      <a class="go" href="projects/digital-mirror/">Read more →</a></li>
+    <li class="stop" id="w-stage" tabindex="0"><div class="top"><h4>From Event to Condition</h4><time>25/26</time></div><div class="meta">Student publication · Leeds History Student Times</div>
+      <p>The Collapse of the Stage in Media History. Published in Leeds History Student Times, Vol. 2 (2025/26), pp. 42–43.</p>
+      <a class="go" href="projects/event-to-condition/">Read more →</a></li>
+    <li class="stop" id="w-food" tabindex="0"><div class="top"><h4>Leeds Food Aid Network Redesign</h4><time>24/25</time></div><div class="meta">Interface design · WCAG 2.0</div>
+      <p>I evaluated the Leeds Food Aid Network website with Nielsen’s heuristics, Krug’s usability tests, a code audit and user interviews, then rebuilt it against WCAG 2.0 Level A.</p>
+      <a class="go" href="projects/food-aid-redesign/">Read more →</a></li>
+    <span class="tram" id="tram" aria-hidden="true"></span>
+  </ol>
+</template>
 
-  <section class="wrap" id="research">
-    <div class="section-head rv"><h2>Research</h2><span>Papers, talks &amp; research design</span></div>
+<template id="t-about">
+  <p class="lede">I'm Zifan Zeng, a final-year BA Digital Media student at the University of Leeds, graduating in 2027.</p>
+  <p>My research sits in digital platform studies. I focus on platform governance and the visibility of digital labour, with particular interests in algorithmic mediation, gender and Chinese platform contexts.</p>
+  <p>My dissertation asks how Xiaohongshu live-streamers negotiate audience gifting into payment for their labour, and how Chinese gift norms and platform rules shape that negotiation.</p>
+  <p>Before Leeds I studied journalism for two years at Hunan University of Arts and Science and reported for the university's newspaper and TV station. I also design and build: HTML, CSS and JavaScript, PHP and MySQL, Figma and the Adobe suite.</p>
+</template>
 
-    <article class="feature rv">
-      <div class="f-media type"><span class="big">Authority<br>without<br>Authorship</span><span class="small">WorldCUR 2027 · Accepted abstract</span></div>
-      <div>
-        <div class="eyebrow">Research · 2026</div>
-        <h3>Authority Without Authorship</h3>
-        <p>How AI-product marketing makes the human judgment it depends on invisible. Drawing on a purposive sample of public marketing from AI vendors, the study proposes a third mechanism of invisible labour: invisibility demanded by the product's own claims.</p>
-        <div class="tags"><span>Invisible labour</span><span>AI products</span><span>Content analysis</span></div>
-        <a class="tlink" href="projects/authority-without-authorship/">Read more <i class="chev"></i></a>
-      </div>
-    </article>
+<template id="t-contact">
+  <p>The quickest way to reach me is email.</p>
+  <div class="mail"><code id="addr">zengzifan2024@163.com</code><button class="btn" id="copy">Copy</button></div>
+  <p class="note" id="copied" aria-live="polite">Based in Leeds, UK</p>
+  <p>Code and project sites are on <a class="go-cv" href="https://github.com/zifan118">GitHub</a>.</p>
+</template>
 
-    <article class="feature rv">
-      <div class="f-media"><img src="assets/img/canal-asian.jpg" alt="Title slide of the Canal+ Asian pitch, with red and cream geometric blocks" loading="lazy" style="object-position:left center"></div>
-      <div>
-        <div class="eyebrow">Talk · ICUR 2026</div>
-        <h3>Algorithmic Paralysis</h3>
-        <p>Rethinking choice and discovery on streaming platforms. The talk asks why more recommendation can leave viewers less able to choose, using the Canal+ Asian prototype as a case.</p>
-        <div class="tags"><span>Recommendation systems</span><span>Streaming</span><span>User agency</span></div>
-        <a class="tlink" href="projects/algorithmic-paralysis/">Read more <i class="chev"></i></a>
-      </div>
-    </article>
-
-    <article class="feature rv">
-      <div class="f-media type" style="background:var(--gold);color:var(--ink)"><span class="big" style="color:var(--ink)">Gendered<br>labour on<br>BBC TikTok</span><span class="small">Multimodal content analysis</span></div>
-      <div>
-        <div class="eyebrow">Research design · 2026</div>
-        <h3>Gendered Labour in BBC News TikTok</h3>
-        <p>A multimodal content analysis of how BBC News TikTok videos represent the gendered division of labour, with a documented coding manual and sampling frame.</p>
-        <div class="tags"><span>Multimodality</span><span>News media</span><span>Gender</span></div>
-        <a class="tlink" href="projects/bbc-tiktok/">Read more <i class="chev"></i></a>
-      </div>
-    </article>
-  </section>
-
-  <section class="wrap" id="projects">
-    <div class="section-head rv"><h2>Digital projects</h2><span>Websites, prototypes, design &amp; motion</span></div>
-    <div class="tiles">
-      <a class="tile rv" href="projects/canal-asian/">
-        <div class="ti"><img src="assets/img/canal-asian.jpg" alt="Canal+ Asian pitch title slide" loading="lazy" style="object-position:left center"></div>
-        <div class="tb"><small>Team project · Lead</small><h4>Canal+ Asian</h4><p>A streaming-platform concept, from survey and interviews to a tested prototype.</p></div>
-      </a>
-      <a class="tile rv" href="projects/digital-mirror/">
-        <div class="ti"><img src="assets/img/digital-mirror-log.jpg" alt="Night view of a lit building from a Digital Mirror log" loading="lazy"></div>
-        <div class="tb"><small>Website · Podcast</small><h4>Digital Mirror</h4><p>Five research logs and a podcast on algorithms and digital identity.</p></div>
-      </a>
-      <a class="tile rv" href="projects/sad-community/">
-        <div class="ti"><img src="assets/img/sad-community.jpg" alt="Illustration of a girl hugging her knees, from the SAD community site" loading="lazy"></div>
-        <div class="tb"><small>PHP · MySQL</small><h4>Harborly</h4><p>A database-driven site with accounts, stories, comments and support links.</p></div>
-      </a>
-      <a class="tile rv" href="projects/food-aid-redesign/">
-        <div class="ti"><img src="assets/img/food-aid.jpg" alt="Illustration of a full shopping bag from the Leeds Food Aid Network redesign" loading="lazy" style="background:#d8e9c0"></div>
-        <div class="tb"><small>Interface design</small><h4>Leeds Food Aid Network</h4><p>User research and a redesign of a community food-aid website.</p></div>
-      </a>
-    </div>
-  </section>
-
-  <section class="wrap where">
-    <div class="section-head rv"><h2>Where next?</h2><span></span></div>
-    <div class="where-grid">
-      <a class="rv" href="#research"><span class="ic">R</span><h4>Research <i class="chev"></i></h4></a>
-      <a class="rv" href="#projects"><span class="ic">P</span><h4>Projects <i class="chev"></i></h4></a>
-      <a class="rv" href="cv/"><span class="ic">CV</span><h4>Curriculum vitae <i class="chev"></i></h4></a>
-    </div>
-  </section>
-</main>
-
+<template id="t-cv">
+  <p class="muted">Timetable, latest first.</p>
+  <div class="wrap-x"><table class="tt">
+    <thead><tr><th>When</th><th>Calling at</th><th>Where</th></tr></thead>
+    <tbody>
+      <tr><td>2027</td><td>Accepted presentation, WorldCUR 2027 (forthcoming)</td><td>World Congress on Undergraduate Research</td></tr>
+      <tr><td>2026–27</td><td>Course Representative, BA Digital Media Year 3</td><td>University of Leeds</td></tr>
+      <tr><td>Jul–Aug 2026</td><td>AI Content Growth Intern</td><td>01Agent (Guangzhou Hyperspace Technology)</td></tr>
+      <tr><td>2026</td><td>Oral presentation, ICUR 2026</td><td>Online</td></tr>
+      <tr><td>2025/26</td><td>Student publication, Leeds History Student Times Vol. 2</td><td>University of Leeds</td></tr>
+      <tr><td>2024–27</td><td>BA Digital Media (expected June 2027)</td><td>University of Leeds</td></tr>
+      <tr><td>2022–24</td><td>BA Journalism, two years completed</td><td>Hunan University of Arts and Science</td></tr>
+      <tr><td>2022–24</td><td>Student Journalist, university newspaper and TV station</td><td>Hunan University of Arts and Science</td></tr>
+    </tbody>
+  </table></div>
+  <p><a class="go-cv" href="cv/">Full CV →</a></p>
+</template>
 
 <script>
-(function(){
-  var body=document.body, burger=document.getElementById('burger'), menu=document.getElementById('menu'),
-      scrim=document.getElementById('scrim'), back=document.getElementById('back'),
-      vMain=menu.querySelector('.v-main'), vSub=menu.querySelector('.v-sub'),
-      btns=menu.querySelectorAll('[data-sub]'), subs=menu.querySelectorAll('.sub'), last=null;
-  function level(sub){
-    menu.classList.toggle('drill',!!sub);
-    vMain.setAttribute('aria-hidden',sub?'true':'false'); vSub.setAttribute('aria-hidden',sub?'false':'true');
-    if(sub){subs.forEach(function(s){s.classList.toggle('on',s.dataset.name===sub)});vSub.scrollTop=0;setTimeout(function(){back.focus()},250)}
-    else if(last){setTimeout(function(){last.focus()},250)}
-  }
-  function open(){body.classList.add('menu-open');burger.setAttribute('aria-expanded','true');burger.setAttribute('aria-label','Close menu');level(null);setTimeout(function(){btns[0].focus()},350)}
-  function close(){body.classList.remove('menu-open');burger.setAttribute('aria-expanded','false');burger.setAttribute('aria-label','Open menu');setTimeout(function(){menu.classList.remove('drill')},600)}
-  burger.addEventListener('click',function(){body.classList.contains('menu-open')?close():open()});
-  scrim.addEventListener('click',close);
-  document.addEventListener('keydown',function(e){if(e.key!=='Escape')return; if(menu.classList.contains('drill'))level(null); else close()});
-  btns.forEach(function(b){b.addEventListener('click',function(){last=b;level(b.dataset.sub)})});
-  back.addEventListener('click',function(){level(null)});
-  menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close)});
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const stage = document.getElementById('stage');
+  const scene = document.getElementById('scene');
+  const hots = document.getElementById('hots');
+  const layers = [...scene.querySelectorAll('.layer')];
 
-  window.addEventListener('load',function(){body.classList.add('loaded')});
-  var io='IntersectionObserver' in window ? new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12}) : null;
-  document.querySelectorAll('.rv').forEach(function(el){io?io.observe(el):el.classList.add('in')});
+  /* ---------- procedural details ---------- */
+  const NS = 'http://www.w3.org/2000/svg';
+  const sl = document.getElementById('sleepers');
+  for (let x = -300; x < 1900; x += 34) {
+    const r = document.createElementNS(NS, 'rect');
+    r.setAttribute('x', x); r.setAttribute('y', 700); r.setAttribute('width', 16); r.setAttribute('height', 70); r.setAttribute('rx', 2);
+    sl.appendChild(r);
+  }
+  const dots = document.getElementById('dots');
+  for (let x = -300; x < 1900; x += 22) for (let k = 0; k < 2; k++) {
+    const y = 840 - (x + 300) * (30 / 2200) + 30 + k * 12;
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', x + k * 11); c.setAttribute('cy', y); c.setAttribute('r', 3.2);
+    dots.appendChild(c);
+  }
+
+  /* ---------- scale: 1em in the scene = 16 scene units ---------- */
+  let scale = 1;
+  function resize() {
+    scale = scene.clientWidth / 1600;
+    scene.style.fontSize = (16 * scale) + 'px';
+    sizeCanvas();
+  }
+
+  /* ---------- cloud shadows: tileable value noise, scrolled ---------- */
+  const cvs = document.getElementById('shadows'), ctx = cvs.getContext('2d');
+  const T = 192, tile = document.createElement('canvas'); tile.width = T; tile.height = T;
+  (function makeTile() {
+    const tctx = tile.getContext('2d'), img = tctx.createImageData(T, T);
+    const rnd = (i, j, p) => { const a = ((i % p) + p) % p, b = ((j % p) + p) % p; const s = Math.sin(a * 127.1 + b * 311.7 + p * 17.3) * 43758.5453; return s - Math.floor(s); };
+    const sm = t => t * t * (3 - 2 * t);
+    const vnoise = (x, y, p) => { const i = Math.floor(x), j = Math.floor(y), fx = sm(x - i), fy = sm(y - j);
+      const a = rnd(i, j, p), b = rnd(i + 1, j, p), c = rnd(i, j + 1, p), d = rnd(i + 1, j + 1, p);
+      return a + (b - a) * fx + (c - a) * fy + (a - b - c + d) * fx * fy; };
+    for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) {
+      let n = 0, amp = .5, p = 3;
+      for (let o = 0; o < 4; o++) { n += amp * vnoise(x / T * p, y / T * p, p); amp *= .5; p *= 2; }
+      const t = Math.min(1, Math.max(0, (n - .48) / .14));
+      const a = t * t * (3 - 2 * t) * 0.42;
+      const k = (y * T + x) * 4; img.data[k] = 58; img.data[k + 1] = 62; img.data[k + 2] = 78; img.data[k + 3] = a * 255;
+    }
+    tctx.putImageData(img, 0, 0);
+  })();
+  function sizeCanvas() { cvs.width = Math.max(2, Math.round(scene.clientWidth / 3)); cvs.height = Math.max(2, Math.round(scene.clientHeight / 3)); drawShadows(); }
+  let off = 0;
+  function drawShadows() {
+    const w = cvs.width * 1.1, h = cvs.height * 1.6;
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+    ctx.imageSmoothingQuality = 'high';
+    const o = -(off % w);
+    for (let x = o - w; x < cvs.width + w; x += w) ctx.drawImage(tile, x, -cvs.height * .3, w, h);
+  }
+
+  let last = 0;
+  function loop(t) {
+    if (!reduce && t - last > 40) { off += cvs.width * 0.0006; drawShadows(); last = t; }
+    requestAnimationFrame(loop);
+  }
+
+  /* ---------- departure board ---------- */
+  const works = [
+    { y: '26/27', n: 'INVIS LABOUR', t: 'TALK', id: 'w-labour' },
+    { y: '2026', n: 'ICUR TALK', t: 'TALK', id: 'w-icur' },
+    { y: '25/26', n: 'CANAL+ ASIAN', t: 'PROTO', id: 'w-canal' },
+    { y: '25/26', n: 'HARBORLY', t: 'WEB', id: 'w-sad' },
+    { y: '25/26', n: 'DIGI MIRROR', t: 'WEB', id: 'w-mirror' },
+  ];
+  const rowsEl = document.getElementById('rows');
+  const CH = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/';
+  const cells = (txt, len, cls = '') => `<span class="cells ${cls}">${[...txt.padEnd(len)].map(ch => `<span class="c" data-t="${ch}"> </span>`).join('')}</span>`;
+  rowsEl.innerHTML = works.map(w => `<button class="row" data-open="works" data-target="${w.id}" aria-label="${w.n.toLowerCase()}, ${w.t.toLowerCase()}, ${w.y}">${cells(w.y, 5)}${cells(w.n, 12)}${cells(w.t, 5, 'type')}</button>`).join('');
+  function flapAll() {
+    rowsEl.querySelectorAll('.c').forEach((c, i) => {
+      const target = c.dataset.t;
+      if (reduce) { c.textContent = target; return; }
+      let n = 0; const steps = 4 + Math.floor(Math.random() * 10);
+      setTimeout(() => {
+        const iv = setInterval(() => {
+          c.textContent = n >= steps ? target : CH[Math.floor(Math.random() * CH.length)];
+          c.classList.remove('flip'); void c.offsetWidth; c.classList.add('flip');
+          if (n++ >= steps) clearInterval(iv);
+        }, 60);
+      }, (i % 21) * 35 + Math.floor(i / 21) * 140);
+    });
+  }
+  const clock = document.getElementById('clock');
+  const tick = () => { const d = new Date(); clock.textContent = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); };
+  tick(); setInterval(tick, 20000);
+
+  /* ---------- heritage train (BR Mk1 proportions) ---------- */
+  const tm = document.getElementById('train-move');
+  const mk = (tag, a, parent, text) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (text) e.textContent = text; (parent || tm).appendChild(e); return e; };
+  function bogie(g, x) {
+    mk('rect', { x: x - 34, y: 122, width: 68, height: 10, rx: 3, fill: '#1c1918' }, g);
+    for (const dx of [-20, 20]) { mk('circle', { cx: x + dx, cy: 136, r: 12, fill: '#2a2624' }, g); mk('circle', { cx: x + dx, cy: 136, r: 3.5, fill: '#7d7770' }, g); }
+  }
+  // steam locomotive, facing left
+  (() => {
+    const g = mk('g', {});
+    // tender
+    mk('rect', { x: 300, y: 36, width: 130, height: 86, rx: 6, fill: '#1e1b1a' }, g);
+    mk('rect', { x: 306, y: 50, width: 118, height: 3, fill: '#c8a65a' }, g);
+    // cab
+    mk('path', { d: 'M226 16 H306 V122 H226 Z', fill: '#1e1b1a' }, g);
+    mk('path', { d: 'M220 16 Q266 2 312 16 V22 H220 Z', fill: '#121010' }, g);
+    mk('rect', { x: 240, y: 32, width: 26, height: 26, rx: 4, style: 'fill:var(--glass)' }, g);
+    // boiler
+    mk('rect', { x: 44, y: 46, width: 186, height: 56, rx: 10, fill: '#1e1b1a' }, g);
+    mk('rect', { x: 44, y: 40, width: 46, height: 68, rx: 8, fill: '#121010' }, g); // smokebox
+    mk('rect', { x: 60, y: 14, width: 18, height: 30, rx: 2, fill: '#121010' }, g);  // chimney
+    mk('rect', { x: 56, y: 12, width: 26, height: 6, rx: 2, fill: '#121010' }, g);
+    mk('path', { d: 'M136 46 q0 -18 16 -18 q16 0 16 18 z', fill: '#121010' }, g);   // dome
+    mk('path', { d: 'M98 74 H228', stroke: '#c8a65a', 'stroke-width': 2 }, g);
+    // running board + buffer beam
+    mk('rect', { x: 30, y: 102, width: 276, height: 8, fill: '#121010' }, g);
+    mk('rect', { x: 20, y: 104, width: 26, height: 18, fill: '#b3201f' }, g);
+    mk('rect', { x: 10, y: 108, width: 12, height: 6, rx: 2, fill: '#121010' }, g);
+    mk('circle', { cx: 50, cy: 88, r: 5, fill: '#f6eccb' }, g);
+    // driving wheels + rods
+    for (const x of [116, 170, 224]) { mk('circle', { cx: x, cy: 124, r: 24, fill: '#7a1e25' }, g); mk('circle', { cx: x, cy: 124, r: 6, fill: '#1e1b1a' }, g); }
+    mk('circle', { cx: 66, cy: 136, r: 12, fill: '#2a2624' }, g);
+    mk('path', { d: 'M116 128 H224', stroke: '#9b958d', 'stroke-width': 5, 'stroke-linecap': 'round' }, g);
+    for (const x of [340, 392]) { mk('circle', { cx: x, cy: 136, r: 12, fill: '#2a2624' }, g); }
+    // steam puffs
+    const p = mk('g', {}, g);
+    for (let i = 0; i < 3; i++) mk('circle', { class: 'puff', cx: 69, cy: 4, r: 14, style: 'fill:var(--steam)' }, p);
+  })();
+  // three maroon coaches
+  const COACH = 520, START = 442;
+  for (let i = 0; i < 3; i++) {
+    const g = mk('g', { transform: `translate(${START + i * (COACH + 10)} 0)` });
+    mk('rect', { x: -10, y: 30, width: 10, height: 80, fill: '#1c1918' }, g); // gangway
+    mk('path', { d: `M0 16 Q2 4 22 2 H${COACH - 22} Q${COACH - 2} 4 ${COACH} 16 Z`, style: 'fill:var(--coach-roof)' }, g);
+    mk('rect', { x: 0, y: 14, width: COACH, height: 108, rx: 6, style: 'fill:var(--maroon)' }, g);
+    mk('path', { d: `M0 30 H${COACH} M0 76 H${COACH}`, stroke: '#d4b16a', 'stroke-width': 1.6, opacity: .9 }, g);
+    // doors at each end with droplights
+    for (const dx of [16, COACH - 46]) {
+      mk('rect', { x: dx, y: 20, width: 30, height: 98, rx: 2, fill: 'none', stroke: '#4d1216', 'stroke-width': 2 }, g);
+      mk('rect', { x: dx + 6, y: 34, width: 18, height: 30, rx: 3, style: 'fill:var(--glass)' }, g);
+      mk('rect', { x: dx + 22, y: 78, width: 3, height: 10, fill: '#d4b16a' }, g);
+    }
+    // compartment windows
+    const n = 7, w = 46, gap = (COACH - 92 - 24 - n * w) / (n - 1);
+    for (let k = 0; k < n; k++) mk('rect', { x: 58 + k * (w + gap), y: 36, width: w, height: 34, rx: 5, style: 'fill:var(--glass)' }, g);
+    mk('rect', { x: 0, y: 112, width: COACH, height: 10, fill: '#1c1918' }, g);
+    bogie(g, 90); bogie(g, COACH - 90);
+  }
+  const TRAIN_LEN = START + 3 * (COACH + 10);
+
+  /* train calls at the platform while Works is open */
+  let trainState = 'away', trainAnim = null;
+  const AWAY_RIGHT = 1900, AWAY_LEFT = -(TRAIN_LEN + 300);
+  const currentX = () => { const m = new DOMMatrixReadOnly(getComputedStyle(tm).transform); return m.m41 || 0; };
+  tm.style.transform = `translateX(${AWAY_RIGHT}px)`;
+  function runTrain(from, to, ms, easing, then) {
+    if (trainAnim) trainAnim.cancel();
+    tm.style.transform = `translateX(${to}px)`;
+    if (reduce) { then && then(); return; }
+    scene.classList.add('go', 'leaving');
+    trainAnim = tm.animate([{ transform: `translateX(${from}px)` }, { transform: `translateX(${to}px)` }], { duration: ms, easing });
+    trainAnim.onfinish = () => { trainAnim = null; scene.classList.remove('go', 'leaving'); then && then(); };
+  }
+  function trainArrive() {
+    if (trainState === 'in' || trainState === 'arriving') return;
+    const from = trainState === 'leaving' ? currentX() : AWAY_RIGHT;
+    trainState = 'arriving';
+    const dist = Math.abs(from);
+    runTrain(from, 0, Math.max(1400, Math.min(3200, dist * 1.7)), 'cubic-bezier(.15,.6,.25,1)', () => { trainState = 'in'; });
+  }
+  function trainDepart() {
+    if (trainState === 'away' || trainState === 'leaving') return;
+    const from = trainState === 'arriving' ? currentX() : 0;
+    trainState = 'leaving';
+    runTrain(from, AWAY_LEFT, 4200, 'cubic-bezier(.55,0,.8,.3)', () => { trainState = 'away'; tm.style.transform = `translateX(${AWAY_RIGHT}px)`; });
+  }
+
+  /* ---------- day / night ---------- */
+  const modeBtn = document.getElementById('mode');
+  function setMode(m) {
+    scene.dataset.mode = m;
+    modeBtn.textContent = m === 'night' ? 'Day' : 'Night';
+    modeBtn.setAttribute('aria-pressed', m === 'night');
+    try { localStorage.setItem('station-mode', m); } catch (e) {}
+  }
+  let saved = null; try { saved = localStorage.getItem('station-mode'); } catch (e) {}
+  const rootTheme = document.documentElement.dataset.theme;
+  setMode(saved || (rootTheme ? (rootTheme === 'dark' ? 'night' : 'day') : (matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day')));
+  modeBtn.addEventListener('click', () => setMode(scene.dataset.mode === 'night' ? 'day' : 'night'));
+
+  /* ---------- sheets ---------- */
+  const veil = document.getElementById('veil'), sheet = document.getElementById('sheet');
+  const kicker = document.getElementById('sheet-kicker'), title = document.getElementById('sheet-title'), body = document.getElementById('sheet-body');
+  const meta = {
+    works: ['Platform 1 · Calling at', 'Works'],
+    about: ['Way out · Station office', 'About'],
+    contact: ['Royal Mail · Last post 17:30', 'Contact'],
+    cv: ['Timetable · Valid from 2022', 'CV'],
+  };
+  let current = null, opener = null, hideTimer = 0;
+  function fill(key, target) {
+    current = key;
+    kicker.textContent = meta[key][0]; title.textContent = meta[key][1];
+    body.replaceChildren(document.getElementById('t-' + key).content.cloneNode(true));
+    if (key === 'contact') wireCopy();
+    if (key === 'works') { wireRoute(target); trainArrive(); } else trainDepart();
+    sheet.scrollTop = 0;
+    if (target) {
+      const el = document.getElementById(target);
+      if (el) setTimeout(() => el.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }), reduce ? 0 : 320);
+    }
+  }
+  function open(key, target) {
+    clearTimeout(hideTimer);
+    if (!veil.hidden && veil.classList.contains('on')) {
+      if (key === current && !target) return;
+      body.classList.add('swap');
+      setTimeout(() => { fill(key, target); requestAnimationFrame(() => body.classList.remove('swap')); }, reduce ? 0 : 180);
+      return;
+    }
+    opener = document.activeElement;
+    fill(key, target);
+    veil.hidden = false;
+    stage.classList.add('dim');
+    requestAnimationFrame(() => requestAnimationFrame(() => { veil.classList.add('on'); sheet.focus({ preventScroll: true }); }));
+  }
+  function close() {
+    if (veil.hidden || !veil.classList.contains('on')) return;
+    veil.classList.remove('on');
+    trainDepart();
+    stage.classList.remove('dim');
+    hideTimer = setTimeout(() => { veil.hidden = true; current = null; }, reduce ? 0 : 520);
+    if (opener && opener.focus) opener.focus({ preventScroll: true });
+  }
+  function wireRoute(target) {
+    const route = document.getElementById('route'), tram = document.getElementById('tram');
+    const stops = [...route.querySelectorAll('.stop')];
+    let pinned = stops.find(s => s.id === target) || stops[0];
+    const moveTo = st => { stops.forEach(s => s.classList.toggle('on', s === st)); tram.style.top = (st.offsetTop + 8) + 'px'; };
+    stops.forEach(st => {
+      st.addEventListener('pointerenter', () => moveTo(st));
+      st.addEventListener('focus', () => { pinned = st; moveTo(st); });
+      st.addEventListener('click', () => { pinned = st; moveTo(st); });
+    });
+    route.addEventListener('pointerleave', () => moveTo(pinned));
+    requestAnimationFrame(() => moveTo(pinned));
+  }
+  function wireCopy() {
+    const btn = document.getElementById('copy'), addr = document.getElementById('addr'), msg = document.getElementById('copied');
+    btn.addEventListener('click', () => {
+      const text = addr.textContent;
+      const selectIt = () => { const r = document.createRange(); r.selectNodeContents(addr); const s = getSelection(); s.removeAllRanges(); s.addRange(r); msg.textContent = 'Address selected. Press Ctrl+C or ⌘C to copy.'; };
+      try {
+        navigator.clipboard.writeText(text).then(() => { msg.textContent = 'Copied to clipboard'; }, selectIt);
+      } catch (e) { selectIt(); }
+    });
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-open]');
+    if (b) open(b.dataset.open, b.dataset.target);
+  });
+  document.getElementById('close').addEventListener('click', close);
+  veil.addEventListener('click', e => { if (e.target === veil) close(); });
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape') close();
+    if (e.key === 'Tab' && !veil.hidden) {
+      const f = [...sheet.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])')];
+      if (!f.length) return;
+      const first = f[0], lastEl = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); lastEl.focus(); }
+      else if (!e.shiftKey && document.activeElement === lastEl) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  /* ---------- boot ---------- */
+  addEventListener('resize', resize);
+  resize();
+  if (stage.scrollWidth > stage.clientWidth) stage.scrollLeft = scene.clientWidth * 0.03;
+  flapAll();
+  const fromHash = () => {
+    const h = location.hash.slice(1);
+    const map = { about: 'about', projects: 'works', research: 'works', works: 'works', contact: 'contact', cv: 'cv' };
+    if (map[h]) open(map[h]);
+  };
+  fromHash(); addEventListener('hashchange', fromHash);
+  requestAnimationFrame(loop);
 })();
 </script>
 </body>
