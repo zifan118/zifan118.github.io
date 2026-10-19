@@ -112,7 +112,21 @@ body:has(.scene[data-mode="night"]){background:#111829}
 .stop{position:relative;padding:14px 0 16px;cursor:default;scroll-margin-top:120px}
 .stop+.stop{border-top:1px solid rgba(42,36,32,.14)}
 .stop::before{content:"";position:absolute;left:-48px;top:22px;width:14px;height:14px;border-radius:50%;background:var(--cream);border:4px solid var(--maroon);box-sizing:content-box;transition:background .25s}
-.stop:first-child::before,.stop:last-child::before{border-radius:4px;width:24px;height:10px;left:-53px;top:24px}
+.stop.end::before{border-radius:4px;width:24px;height:10px;left:-53px;top:24px}
+.plat{position:relative;display:flex;align-items:center;gap:10px;margin-top:16px;padding:6px 0 4px;scroll-margin-top:120px}
+.plat::before{content:"";position:absolute;left:-53px;top:13px;width:24px;height:10px;border-radius:4px;background:var(--cream);border:4px solid var(--maroon);box-sizing:content-box}
+.plat::after{content:"";order:2;flex:1;min-width:12px;height:1.5px;background:var(--ink);opacity:.3}
+.plat .no{font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--cream);background:var(--ink);padding:5px 7px;border-radius:3px;white-space:nowrap}
+.plat .pn{font:700 22px/1.1 var(--f-display);letter-spacing:.06em;text-transform:uppercase}
+.plat .cnt{order:3;font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
+.route[data-show="websites"]>li:not([data-g="websites"]),.route[data-show="research"]>li:not([data-g="research"]),.route[data-show="others"]>li:not([data-g="others"]){display:none}
+.lines{display:flex;flex-wrap:wrap;gap:8px}
+.lines button{font:600 12.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink);background:transparent;border:1.5px solid var(--ink);border-radius:4px;padding:9px 11px;cursor:pointer;display:inline-flex;gap:7px;align-items:baseline}
+.lines button i{font-style:normal;font-weight:500;color:var(--maroon)}
+.lines button:hover{background:rgba(122,30,37,.1)}
+.lines button[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
+.lines button[aria-pressed="true"] i{color:var(--yellow)}
+.lines button:focus-visible{outline:2px solid var(--maroon);outline-offset:2px}
 .stop.on::before{background:var(--yellow)}
 .stop .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .stop h4{margin:0;font:700 24px/1.15 var(--f-display);letter-spacing:.02em;text-wrap:balance;transition:color .25s}
@@ -168,7 +182,10 @@ body:has(.scene[data-mode="night"]){background:#111829}
 .body p{margin:0;max-width:62ch}
 .lede{font-size:18px}
 .muted{color:var(--ink-soft)}
-.cvpdf{display:block;width:100%;aspect-ratio:595/842;border:1.5px solid var(--ink);border-radius:4px;background:#fff}
+.cvpdf{position:relative;width:100%;aspect-ratio:595/842;border:1.5px solid var(--ink);border-radius:4px;background:#fff;overflow:hidden}
+.cvpdf.ready{aspect-ratio:auto}
+.cvpdf canvas{display:block;width:100%;height:auto}
+.cvpdf .cvload{position:absolute;inset:0;display:grid;place-items:center;margin:0;font:500 12px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
 
 .tickets{display:grid;gap:12px}
 .ticket{display:grid;grid-template-columns:72px 1fr;border:1.5px solid var(--ink);border-radius:4px;background:#f7f0e0;overflow:hidden;scroll-margin-top:110px}
@@ -468,34 +485,43 @@ body:has(.scene[data-mode="night"]){background:#111829}
 </div>
 
 <template id="t-works">
-  <p class="muted">This train calls at every project, newest first. Hover a stop to move the train.</p>
+  <p class="muted">Nine stops on three platforms. Ride the whole line, or choose a platform.</p>
+  <div class="lines" role="group" aria-label="Choose a platform">
+    <button type="button" data-show="all" aria-pressed="true">All <i>9</i></button>
+    <button type="button" data-show="websites" aria-pressed="false">Websites <i>3</i></button>
+    <button type="button" data-show="research" aria-pressed="false">Research <i>4</i></button>
+    <button type="button" data-show="others" aria-pressed="false">Others <i>2</i></button>
+  </div>
   <div class="route-key"><span>Stop</span><span>Year</span></div>
-  <ol class="route" id="route">
-    <li class="stop" id="w-labour" tabindex="0"><div class="top"><h4>Authority Without Authorship</h4><time>26/27</time></div><div class="meta">Accepted presentation · WorldCUR 2027</div>
-      <p>How AI vendors’ marketing sells cost savings while leaving operators’ repeated testing and selection uncounted. Proposes self-produced invisibility as a possible third mechanism of invisible labour. The study grew out of my 01Agent internship.</p>
-      <a class="go" href="projects/authority-without-authorship/">Read more →</a></li>
-    <li class="stop" id="w-icur" tabindex="0"><div class="top"><h4>Algorithmic Paralysis</h4><time>2026</time></div><div class="meta">Oral presentation, online · ICUR 2026</div>
-      <p>Rethinking choice and discovery on streaming platforms. Argues that streaming interfaces keep users browsing while deferring the moment of choice, using a walkthrough analysis of Netflix and TikTok.</p>
-      <a class="go" href="projects/algorithmic-paralysis/">Read more →</a></li>
-    <li class="stop" id="w-map" tabindex="0"><div class="top"><h4>Map Photo Album</h4><time>2026</time></div><div class="meta">Personal project · Desktop app</div>
-      <p>An offline desktop photo archive in which visited cities and countries open into location-based photographs and music.</p>
-      <span class="soon">Video demo coming soon</span></li>
-    <li class="stop" id="w-canal" tabindex="0"><div class="top"><h4>Canal+ Asian</h4><time>25/26</time></div><div class="meta">Team project lead · D&amp;AD New Blood brief</div>
+  <ol class="route" id="route" data-show="all">
+    <li class="plat" data-g="websites" id="p-websites"><span class="no">Platform 1</span><span class="pn">Websites</span><span class="cnt">3 stops</span></li>
+    <li class="stop" data-g="websites" id="w-canal" tabindex="0"><div class="top"><h4>Canal+ Asian</h4><time>25/26</time></div><div class="meta">Team project lead · D&amp;AD New Blood brief</div>
       <p>A streaming platform for Asian film and TV that replaces algorithmic recommendation with three user-chosen entry points: Being Surprised, Joining Discussions and Exploring Stories. I ran the survey, interviews and user testing, built the front end and led the pitch. It later became the basis of my ICUR 2026 paper.</p>
       <a class="go" href="projects/canal-asian/">Read more →</a></li>
-    <li class="stop" id="w-sad" tabindex="0"><div class="top"><h4>Harborly</h4><time>25/26</time></div><div class="meta">Social anxiety community site · PHP · MySQL</div>
+    <li class="stop" data-g="websites" id="w-sad" tabindex="0"><div class="top"><h4>Harborly</h4><time>25/26</time></div><div class="meta">Social anxiety community site · PHP · MySQL</div>
       <p>A support website for people with social anxiety. I cleaned a data.gov.uk dataset into MySQL, queried it with PHP and visualised it with Chart.js.</p>
       <a class="go" href="projects/sad-community/">Read more →</a></li>
-    <li class="stop" id="w-bbc" tabindex="0"><div class="top"><h4>Gendered Labour in BBC News TikTok</h4><time>25/26</time></div><div class="meta">Research design · Multimodal content analysis</div>
-      <p>A multimodal content analysis design for how @BBCNews constructs gendered divisions of labour in its TikTok videos, where video, captions and graphics work together to make meaning.</p>
-      <a class="go" href="projects/bbc-tiktok/">Read more →</a></li>
-    <li class="stop" id="w-mirror" tabindex="0"><div class="top"><h4>Digital Mirror</h4><time>25/26</time></div><div class="meta">Research website · Podcast</div>
+    <li class="stop" data-g="websites" id="w-mirror" tabindex="0"><div class="top"><h4>Digital Mirror</h4><time>25/26</time></div><div class="meta">Research website · Podcast</div>
       <p>A research website of observation logs on my own platform life, made alongside a co-produced podcast comparing Justin Bieber’s identity work on TikTok and Instagram.</p>
       <a class="go" href="projects/digital-mirror/">Read more →</a></li>
-    <li class="stop" id="w-stage" tabindex="0"><div class="top"><h4>From Event to Condition</h4><time>25/26</time></div><div class="meta">Student publication · Leeds History Student Times</div>
+    <li class="plat" data-g="research" id="p-research"><span class="no">Platform 2</span><span class="pn">Research</span><span class="cnt">4 stops</span></li>
+    <li class="stop" data-g="research" id="w-labour" tabindex="0"><div class="top"><h4>Authority Without Authorship</h4><time>26/27</time></div><div class="meta">Accepted presentation · WorldCUR 2027</div>
+      <p>How AI vendors’ marketing sells cost savings while leaving operators’ repeated testing and selection uncounted. Proposes self-produced invisibility as a possible third mechanism of invisible labour. The study grew out of my 01Agent internship.</p>
+      <a class="go" href="projects/authority-without-authorship/">Read more →</a></li>
+    <li class="stop" data-g="research" id="w-icur" tabindex="0"><div class="top"><h4>Algorithmic Paralysis</h4><time>2026</time></div><div class="meta">Oral presentation, online · ICUR 2026</div>
+      <p>Rethinking choice and discovery on streaming platforms. Argues that streaming interfaces keep users browsing while deferring the moment of choice, using a walkthrough analysis of Netflix and TikTok.</p>
+      <a class="go" href="projects/algorithmic-paralysis/">Read more →</a></li>
+    <li class="stop" data-g="research" id="w-bbc" tabindex="0"><div class="top"><h4>Gendered Labour in BBC News TikTok</h4><time>25/26</time></div><div class="meta">Research design · Multimodal content analysis</div>
+      <p>A multimodal content analysis design for how @BBCNews constructs gendered divisions of labour in its TikTok videos, where video, captions and graphics work together to make meaning.</p>
+      <a class="go" href="projects/bbc-tiktok/">Read more →</a></li>
+    <li class="stop" data-g="research" id="w-stage" tabindex="0"><div class="top"><h4>From Event to Condition</h4><time>25/26</time></div><div class="meta">Student publication · Leeds History Student Times</div>
       <p>The Collapse of the Stage in Media History. Published in Leeds History Student Times, Vol. 2 (2025/26), pp. 42–43.</p>
       <a class="go" href="projects/event-to-condition/">Read more →</a></li>
-    <li class="stop" id="w-food" tabindex="0"><div class="top"><h4>Leeds Food Aid Network Redesign</h4><time>24/25</time></div><div class="meta">Interface design · WCAG 2.1</div>
+    <li class="plat" data-g="others" id="p-others"><span class="no">Platform 3</span><span class="pn">Others</span><span class="cnt">2 stops</span></li>
+    <li class="stop" data-g="others" id="w-map" tabindex="0"><div class="top"><h4>Map Photo Album</h4><time>2026</time></div><div class="meta">Personal project · Desktop app</div>
+      <p>An offline desktop photo archive in which visited cities and countries open into location-based photographs and music.</p>
+      <span class="soon">Video demo coming soon</span></li>
+    <li class="stop" data-g="others" id="w-food" tabindex="0"><div class="top"><h4>Leeds Food Aid Network Redesign</h4><time>24/25</time></div><div class="meta">Interface design · WCAG 2.1</div>
       <p>I evaluated the Leeds Food Aid Network website with Nielsen’s heuristics, Krug’s usability tests, a code audit and user interviews, then rebuilt it against WCAG 2.1 Level A.</p>
       <a class="go" href="projects/food-aid-redesign/">Read more →</a></li>
     <span class="tram" id="tram" aria-hidden="true"></span>
@@ -517,9 +543,7 @@ body:has(.scene[data-mode="night"]){background:#111829}
 </template>
 
 <template id="t-cv">
-  <object class="cvpdf" data="cv/CV_Zifan_Zeng.pdf#toolbar=0&amp;navpanes=0&amp;view=FitH" type="application/pdf" aria-label="Curriculum vitae of Zifan Zeng (PDF)">
-    <p><a class="go-cv" href="cv/CV_Zifan_Zeng.pdf">Open the CV (PDF) →</a></p>
-  </object>
+  <div class="cvpdf" id="cvpdf" role="img" aria-label="Curriculum vitae of Zifan Zeng, one page"><p class="cvload">Loading CV</p></div>
 </template>
 
 <script>
@@ -723,34 +747,36 @@ body:has(.scene[data-mode="night"]){background:#111829}
   const veil = document.getElementById('veil'), sheet = document.getElementById('sheet');
   const kicker = document.getElementById('sheet-kicker'), title = document.getElementById('sheet-title'), body = document.getElementById('sheet-body');
   const meta = {
-    works: ['Platform 1 · Calling at', 'Works'],
+    works: ['Departures · Calling at', 'Works'],
     about: ['Way out · Station office', 'About'],
     contact: ['Royal Mail · Last post 17:30', 'Contact'],
     cv: ['Valid from 2022 · One page', 'CV'],
   };
-  let current = null, opener = null, hideTimer = 0;
-  function fill(key, target) {
+  let current = null, opener = null, hideTimer = 0, routeApi = null;
+  function fill(key, target, group) {
     current = key;
     kicker.textContent = meta[key][0]; title.textContent = meta[key][1];
     body.replaceChildren(document.getElementById('t-' + key).content.cloneNode(true));
     if (key === 'contact') wireCopy();
-    if (key === 'works') { wireRoute(target); trainArrive(); } else trainDepart();
+    routeApi = null;
+    if (key === 'works') { wireRoute(target, group); trainArrive(); } else trainDepart();
+    if (key === 'cv') renderCV(body.querySelector('#cvpdf'));
     sheet.scrollTop = 0;
     if (target) {
       const el = document.getElementById(target);
       if (el) setTimeout(() => el.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }), reduce ? 0 : 320);
     }
   }
-  function open(key, target) {
+  function open(key, target, group) {
     clearTimeout(hideTimer);
     if (!veil.hidden && veil.classList.contains('on')) {
-      if (key === current && !target) return;
+      if (key === current && !target) { if (key === 'works' && group && routeApi) routeApi.show(group); return; }
       body.classList.add('swap');
-      setTimeout(() => { fill(key, target); requestAnimationFrame(() => body.classList.remove('swap')); }, reduce ? 0 : 180);
+      setTimeout(() => { fill(key, target, group); requestAnimationFrame(() => body.classList.remove('swap')); }, reduce ? 0 : 180);
       return;
     }
     opener = document.activeElement;
-    fill(key, target);
+    fill(key, target, group);
     veil.hidden = false;
     stage.classList.add('dim');
     requestAnimationFrame(() => requestAnimationFrame(() => { veil.classList.add('on'); sheet.focus({ preventScroll: true }); }));
@@ -762,19 +788,78 @@ body:has(.scene[data-mode="night"]){background:#111829}
     stage.classList.remove('dim');
     hideTimer = setTimeout(() => { veil.hidden = true; current = null; }, reduce ? 0 : 520);
     if (opener && opener.focus) opener.focus({ preventScroll: true });
+    if (location.hash) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
   }
-  function wireRoute(target) {
+  function wireRoute(target, group) {
     const route = document.getElementById('route'), tram = document.getElementById('tram');
-    const stops = [...route.querySelectorAll('.stop')];
-    let pinned = stops.find(s => s.id === target) || stops[0];
-    const moveTo = st => { stops.forEach(s => s.classList.toggle('on', s === st)); tram.style.top = (st.offsetTop + 8) + 'px'; };
-    stops.forEach(st => {
+    const all = [...route.querySelectorAll('.stop')];
+    const chips = [...body.querySelectorAll('.lines button')];
+    let pinned = null;
+    const moveTo = st => { if (!st) return; all.forEach(s => s.classList.toggle('on', s === st)); tram.style.top = (st.offsetTop + 8) + 'px'; };
+    const show = (g, focus) => {
+      if (!['websites', 'research', 'others'].includes(g)) g = 'all';
+      route.dataset.show = g;
+      chips.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.show === g)));
+      const vis = all.filter(s => g === 'all' || s.dataset.g === g);
+      all.forEach(s => s.classList.toggle('end', s === vis[vis.length - 1]));
+      pinned = vis.find(s => s.id === focus) || vis[0];
+      moveTo(pinned);
+      requestAnimationFrame(() => moveTo(pinned));
+    };
+    chips.forEach(b => b.addEventListener('click', () => {
+      show(b.dataset.show); sheet.scrollTop = 0;
+      try { history.replaceState(null, '', b.dataset.show === 'all' ? '#works' : '#' + b.dataset.show); } catch (e) {}
+    }));
+    all.forEach(st => {
       st.addEventListener('pointerenter', () => moveTo(st));
       st.addEventListener('focus', () => { pinned = st; moveTo(st); });
       st.addEventListener('click', () => { pinned = st; moveTo(st); });
     });
     route.addEventListener('pointerleave', () => moveTo(pinned));
-    requestAnimationFrame(() => moveTo(pinned));
+    routeApi = { show };
+    const t = all.find(s => s.id === target);
+    show(t ? 'all' : group, target);
+  }
+  /* CV: drawn with pdf.js so it renders the same in every browser and sheet transition */
+  const PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+  let pdfLib = null, cvDoc = null;
+  function loadPdfjs() {
+    if (pdfLib) return pdfLib;
+    pdfLib = new Promise((ok, no) => {
+      const sc = document.createElement('script');
+      sc.src = PDFJS + 'pdf.min.js'; sc.onload = () => ok(window.pdfjsLib); sc.onerror = no;
+      document.head.appendChild(sc);
+    }).then(async lib => {
+      const code = await (await fetch(PDFJS + 'pdf.worker.min.js')).text();
+      lib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(new Blob([code], { type: 'text/javascript' }));
+      return lib;
+    }).catch(e => { pdfLib = null; throw e; });
+    return pdfLib;
+  }
+  async function renderCV(box) {
+    if (!box) return;
+    try {
+      const lib = await loadPdfjs();
+      if (!cvDoc) cvDoc = await lib.getDocument({ url: 'cv/CV_Zifan_Zeng.pdf' }).promise;
+      const frag = document.createDocumentFragment();
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
+      for (let n = 1; n <= cvDoc.numPages; n++) {
+        const page = await cvDoc.getPage(n);
+        const base = page.getViewport({ scale: 1 });
+        const vp = page.getViewport({ scale: Math.max(1200, (box.clientWidth || 0) * dpr) / base.width });
+        const c = document.createElement('canvas');
+        c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+        await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+        frag.appendChild(c);
+      }
+      if (!box.isConnected) return;
+      box.replaceChildren(frag); box.classList.add('ready');
+    } catch (e) {
+      if (!box.isConnected) return;
+      const p = document.createElement('p'); p.style.cssText = 'padding:16px;margin:0';
+      p.innerHTML = '<a class="go-cv" href="cv/CV_Zifan_Zeng.pdf">Open the CV (PDF) →</a>';
+      box.replaceChildren(p); box.removeAttribute('role'); box.classList.add('ready');
+    }
   }
   function wireCopy() {
     const btn = document.getElementById('copy'), addr = document.getElementById('addr'), msg = document.getElementById('copied');
@@ -810,8 +895,8 @@ body:has(.scene[data-mode="night"]){background:#111829}
   flapAll();
   const fromHash = () => {
     const h = location.hash.slice(1);
-    const map = { about: 'about', projects: 'works', research: 'works', works: 'works', contact: 'contact', cv: 'cv' };
-    if (map[h]) open(map[h]);
+    const map = { about: 'about', projects: 'works', works: 'works', websites: 'works', research: 'works', others: 'works', contact: 'contact', cv: 'cv' };
+    if (map[h]) open(map[h], undefined, ['websites', 'research', 'others'].includes(h) ? h : undefined);
   };
   fromHash(); addEventListener('hashchange', fromHash);
   requestAnimationFrame(loop);
