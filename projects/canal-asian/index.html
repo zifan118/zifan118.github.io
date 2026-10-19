@@ -5,114 +5,154 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Canal+ Asian — Zifan Zeng</title>
 <meta name="description" content="Canal+ Asian: a student streaming-platform concept for Asian film and TV that replaces algorithmic recommendation with user-chosen ways in. Project lead: Zifan Zeng.">
-<meta name="theme-color" content="#7a1e25">
+<meta name="theme-color" content="#5c1a21">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;600;700&family=Cabin+Condensed:wght@600;700&family=DM+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="../../assets/station/station.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cabin+Condensed:wght@600;700&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/carriage/carriage.css">
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
+<div class="car">
+  <header class="top">
+    <a class="back" href="../../">← Platform</a>
+    <h1 class="plate"><i aria-hidden="true"></i>Canal+ Asian</h1>
+    <p class="meta">Team project · 25/26</p>
+  </header>
 
-<header class="band">
-  <div class="band-top">
-    <a class="pill" href="../../">← Platform</a>
-    <button class="pill mode" id="mode" aria-pressed="false">Night</button>
-  </div>
-  <h1><span class="plate"><span>Canal+ Asian</span></span><span class="posts" aria-hidden="true"><i></i><i></i></span></h1>
-</header>
+  <div class="deck">
+    <div class="stage" id="stage" data-view="window">
+      <div class="track">
 
-<main id="main">
-  <section class="wrap intro" aria-label="Overview">
-    <div>
-      <p class="lede">A streaming platform that helps you understand Asian film and TV, instead of feeding you more of the same.</p>
-      <div class="cta">
-        <a class="btn primary" href="prototype/">Open the prototype →</a>
-        <a class="btn" href="#campaign">Watch the film</a>
+        <!-- slide 1: the window -->
+        <div class="slide">
+          <div class="win">
+            <div class="glass" id="glass">
+              <div class="sky" id="sky" aria-hidden="true"><div class="scene air" id="air"></div><div class="scene meadow" id="meadow"></div></div>
+
+              <!-- Research -->
+              <section class="pane play" id="pane-research" role="tabpanel" aria-labelledby="t-research" tabindex="0">
+                <div id="survey">
+                  <p class="lab">Survey</p>
+                  <p class="lead"><b>36</b>international students</p>
+                  <div class="rings">
+                    <figure class="donut" style="--v:77.8"><div class="ring"><svg viewBox="0 0 120 120" role="img" aria-label="77.8% had run into geo-restrictions"><circle class="tr" cx="60" cy="60" r="54" pathLength="100"/><circle class="ar" cx="60" cy="60" r="54" pathLength="100"/></svg><span class="val"><span>77.8<small>%</small></span></span></div><figcaption>had run into geo-restrictions</figcaption></figure>
+                    <figure class="donut" style="--v:44"><div class="ring"><svg viewBox="0 0 120 120" role="img" aria-label="44% use VPNs just to keep watching"><circle class="tr" cx="60" cy="60" r="54" pathLength="100"/><circle class="ar" cx="60" cy="60" r="54" pathLength="100"/></svg><span class="val"><span>44<small>%</small></span></span></div><figcaption>use VPNs just to keep watching</figcaption></figure>
+                    <figure class="donut" style="--v:33"><div class="ring"><svg viewBox="0 0 120 120" role="img" aria-label="33% named missing cultural context as a barrier"><circle class="tr" cx="60" cy="60" r="54" pathLength="100"/><circle class="ar" cx="60" cy="60" r="54" pathLength="100"/></svg><span class="val"><span>33<small>%</small></span></span></div><figcaption>named missing cultural context as a barrier</figcaption></figure>
+                    <figure class="donut" style="--v:94"><div class="ring"><svg viewBox="0 0 120 120" role="img" aria-label="94% were interested in a dedicated platform"><circle class="tr" cx="60" cy="60" r="54" pathLength="100"/><circle class="ar" cx="60" cy="60" r="54" pathLength="100"/></svg><span class="val"><span>94<small>%</small></span></span></div><figcaption>were interested in a dedicated platform</figcaption></figure>
+                  </div>
+                  <p class="foot-note">Snowball-sampled online survey, then five semi-structured interviews. Each ring is a share of all 36 respondents.</p>
+                  <p class="hint">Three rounds of user testing below</p>
+                </div>
+
+                <section class="round" id="r1">
+                  <p class="lab">User testing · Round 1 of 3</p>
+                  <div class="exch">
+                    <div class="bubble them"><span class="who">Tester</span><p>I didn't know where to start.</p></div>
+                    <div class="bubble us"><span class="who">Our change</span><p>Removed the country sidebar. Black and Canal+ red only.</p></div>
+                  </div>
+                  <p class="note">Browsing by country lost viewers with no regional preference. We cut it, and cut the palette to black and red.</p>
+                </section>
+
+                <section class="round" id="r2">
+                  <p class="lab">User testing · Round 2 of 3</p>
+                  <div class="exch">
+                    <div class="bubble them"><span class="who">Testers, in summary</span><p>The brand reads clearly now, but the culture has gone, and the programmes lead nowhere.</p></div>
+                    <div class="bubble us"><span class="who">Our change</span><p>Added Explore and Discussion, show pop-ups and a watchlist.</p></div>
+                  </div>
+                  <p class="note">The schedule grid lowered the commitment threshold, but cultural features had disappeared, so we brought them back as pages of their own.</p>
+                </section>
+
+                <section class="round" id="r3">
+                  <p class="lab">User testing · Round 3 of 3</p>
+                  <div class="exch">
+                    <div class="bubble them"><span class="who">Tester, on the Discussion page</span><p>This is the page that convinced me I'd actually use this platform.</p></div>
+                    <div class="bubble us"><span class="who">Result</span><p>The final four-page site was validated.</p></div>
+                  </div>
+                  <p class="note">Five participants across three rounds.</p>
+                </section>
+              </section>
+
+              <!-- Webpages -->
+              <section class="pane web" id="pane-web" role="tabpanel" aria-labelledby="t-web" tabindex="0" hidden>
+                <p class="lab">The prototype · three ways in</p>
+                <div class="map" id="map"></div>
+                <div class="maplist" id="maplist"></div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <!-- slide 2: the seat-back screen -->
+        <div class="slide">
+          <section class="seat" id="pane-video" role="tabpanel" aria-labelledby="t-video" aria-hidden="true">
+            <div class="rack" aria-hidden="true"><i style="left:12%"></i><i style="left:50%"></i><i style="right:12%"></i></div>
+            <div class="back-seat" aria-hidden="true"><div class="cloth"></div><div class="pocket"></div></div>
+            <div class="tv">
+              <video id="film" controls playsinline preload="metadata" poster="media/demo-poster.jpg" width="1280" height="720"><source src="media/demo.mp4" type="video/mp4">Your browser does not support video.</video>
+              <p class="brand">Canal+ Asian · Promotional film</p>
+              <i class="led" aria-hidden="true"></i>
+            </div>
+            <p class="seat-cap">Use the ⤢ control for full screen</p>
+          </section>
+        </div>
       </div>
     </div>
-    <div class="ticket" role="img" aria-label="Ticket: team project, 2025/26, Zifan Zeng as project lead">
-      <div class="row"><span>Std</span><span>No. 0004</span></div>
-      <div class="route"><b>Leeds</b><i>to</i><b>Canal+ Asian</b></div>
-      <div class="row"><span>Project lead</span><span>25/26</span></div>
-    </div>
-  </section>
 
-  <section class="wrap">
-    <figure class="shot">
-      <img src="media/proto-index.jpg" width="1440" height="900" alt="Canal+ Asian prototype homepage: Culture is not a category. It's a world.">
-      <figcaption>D&amp;AD New Blood brief for Canal+. A student concept, not affiliated with Canal+.</figcaption>
-    </figure>
-  </section>
+    <aside class="strip" aria-label="Project sections">
+      <p class="strip-h">This train calls at</p>
+      <ol class="calls" role="tablist" aria-orientation="vertical">
+        <li class="call on" data-id="research">
+          <span class="lamp" aria-hidden="true"></span>
+          <button class="stop-btn" role="tab" id="t-research" aria-controls="pane-research" aria-selected="true"><b>Research</b><small>Survey and three rounds of testing</small></button>
+          <div class="subs"><ol>
+            <li><button class="sub-btn on" data-to="survey">Survey</button></li>
+            <li><button class="sub-btn" data-to="r1">Round 1</button></li>
+            <li><button class="sub-btn" data-to="r2">Round 2</button></li>
+            <li><button class="sub-btn" data-to="r3">Round 3</button></li>
+          </ol></div>
+        </li>
+        <li class="call" data-id="web">
+          <span class="lamp" aria-hidden="true"></span>
+          <button class="stop-btn" role="tab" id="t-web" aria-controls="pane-web" aria-selected="false" tabindex="-1"><b>Webpages</b><small>The prototype and its design ideas</small></button>
+          <div class="subs"><ol>
+            <li><button class="sub-btn on" data-focus="">All lines</button></li>
+            <li><button class="sub-btn" data-focus="surprise">Being Surprised</button></li>
+            <li><button class="sub-btn" data-focus="discussion">Joining Discussions</button></li>
+            <li><button class="sub-btn" data-focus="explore">Exploring Stories</button></li>
+          </ol></div>
+        </li>
+        <li class="call" data-id="video">
+          <span class="lamp" aria-hidden="true"></span>
+          <button class="stop-btn" role="tab" id="t-video" aria-controls="pane-video" aria-selected="false" tabindex="-1"><b>Video demo</b><small>Promotional film</small></button>
+          <div class="subs"><ol></ol></div>
+        </li>
+      </ol>
+      <p class="team"><b>Team</b> · Zifan Zeng (project lead, research, website, pitch), Shiyuan Zhang, Tianyue Xu, Ziyi Fu, Chenyu Zhou, Jiaqi Wang</p>
+    </aside>
+  </div>
 
-  <section class="wrap sec" id="research">
-    <div class="head">
-      <span class="k">The problem</span>
-      <h2>Asian stories get lost twice: at the border, and in translation.</h2>
-    </div>
-    <dl class="stats">
-      <div><dt>77.8%</dt><dd>had run into geo-restrictions</dd></div>
-      <div><dt>44%</dt><dd>use VPNs just to keep watching</dd></div>
-      <div><dt>33%</dt><dd>named missing cultural context as a barrier</dd></div>
-      <div><dt>94%</dt><dd>wanted a dedicated platform</dd></div>
-    </dl>
-    <p class="fine">Survey of 36 international students, followed by 5 interviews.</p>
-  </section>
+  <footer class="foot">
+    <a href="../../">Return to the platform</a>
+    <a href="../sad-community/"><span>Next departure</span>Harborly →</a>
+  </footer>
+</div>
 
-  <section class="wrap sec" id="testing">
-    <div class="head">
-      <span class="k">Three rounds of testing</span>
-      <h2>From a country menu to choosing by mood.</h2>
-    </div>
-    <ol class="steps">
-      <li><small>Round 1</small><p>Browsing by country lost viewers with no regional preference. We cut it, and cut the palette to black and red.</p></li>
-      <li><small>Round 2</small><p>The brand read clearly, but culture had gone missing. We added Explore and Discussion.</p></li>
-      <li><small>Round 3</small><p>The final four-page site was validated.</p><q>This is the page that convinced me I'd actually use this platform.</q></li>
-    </ol>
-  </section>
-
-  <section class="wrap sec" id="website">
-    <div class="head">
-      <span class="k">The website</span>
-      <h2>Three ways in, none of them an algorithm.</h2>
-      <p>Hand-written HTML, CSS and JavaScript. Click a screen to open it.</p>
-    </div>
-    <div class="grid2">
-      <figure class="shot"><a href="prototype/explore.html"><img src="media/proto-explore.jpg" width="1440" height="900" alt="Explore page asking what do you feel like tonight, with mood cards" loading="lazy"></a><figcaption><b>Explore</b> · choose by mood, not by country</figcaption></figure>
-      <figure class="shot"><a href="prototype/surprise.html"><img src="media/proto-surprise.jpg" width="1440" height="900" alt="Surprise page with editorial quote cards from top shows" loading="lazy"></a><figcaption><b>Surprise</b> · a line first, then the show behind it</figcaption></figure>
-      <figure class="shot"><a href="prototype/discussion.html"><img src="media/proto-discussion.jpg" width="1440" height="900" alt="Community discussion page with a thread open" loading="lazy"></a><figcaption><b>Discussion</b> · reviews, theories and a Culture tab</figcaption></figure>
-      <figure class="shot"><img src="media/watching.jpg" width="1580" height="851" alt="Design board of the watching page features: plugins, live comments, culture cards, subtitles" loading="lazy"><figcaption><b>Watching</b> · danmu, bilingual subtitles, culture cards (team design board)</figcaption></figure>
-    </div>
-  </section>
-
-  <section class="wrap sec" id="campaign">
-    <div class="head">
-      <span class="k">Campaign</span>
-      <h2>Stop watching more. Start watching better.</h2>
-    </div>
-    <figure class="shot">
-      <video controls preload="metadata" poster="media/demo-poster.jpg" width="1280" height="720"><source src="media/demo.mp4" type="video/mp4">Your browser does not support video.</video>
-      <figcaption>Our persona, Emily, goes from scrolling alone to watching together.</figcaption>
-    </figure>
-    <div class="posters">
-      <img src="media/poster1.jpg" width="1190" height="1684" alt="Poster: Stop watching more. Start watching better." loading="lazy">
-      <img src="media/poster2.jpg" width="1190" height="1684" alt="Poster: More than watching. Start understanding Asia." loading="lazy">
-    </div>
-    <div class="rack" aria-label="Social media posts" tabindex="0">
-      <img src="media/social1.jpg" width="372" height="558" alt="Social media post" loading="lazy"><img src="media/social2.jpg" width="366" height="558" alt="Social media post" loading="lazy"><img src="media/social3.jpg" width="368" height="554" alt="Social media post" loading="lazy"><img src="media/social4.jpg" width="370" height="712" alt="Social media post" loading="lazy"><img src="media/social5.jpg" width="376" height="702" alt="Social media post" loading="lazy"><img src="media/social6.jpg" width="378" height="712" alt="Social media post" loading="lazy"><img src="media/social7.jpg" width="374" height="712" alt="Social media post" loading="lazy">
-    </div>
-    <p class="team"><b>Team</b> · Zifan Zeng (project lead, research, website, pitch), Shiyuan Zhang, Tianyue Xu, Ziyi Fu, Chenyu Zhou, Jiaqi Wang</p>
-  </section>
-</main>
-
-<footer class="wrap depart">
-  <a class="next" href="../sad-community/">
-    <div><small>Next departure</small><span data-flap="HARBORLY"></span></div>
-    <span class="arrow" aria-hidden="true">→</span>
-  </a>
-  <a class="home" href="../../">Return to the platform</a>
-</footer>
-
-<script src="../../assets/station/station.js"></script>
+<script>
+window.CARRIAGE = {
+  base: 'prototype/',
+  lines: [
+    { id: 'surprise', y: 124, name: '01 · Being Surprised', url: 'surprise.html', open: 'Open Surprise →',
+      pts: [[178, 300], [232, 269], [300, 199], [364, 146], [462, 129], [560, 134], [650, 124], [750, 122], [845, 115]],
+      stops: [['Dialogue first', ['A line of dialogue', 'leads, not a poster.']], ['The show comes second', ['It appears only when', 'the line speaks to you.']]] },
+    { id: 'discussion', y: 300, name: '02 · Joining Discussions', url: 'discussion.html', open: 'Open Discussion →',
+      pts: [[178, 300], [300, 302], [462, 299], [560, 303], [650, 297], [750, 302], [845, 300]],
+      stops: [['Side by side', ['Reviews, theories and', 'recommendations.']], ['A Culture tab', ['Cultural questions stay', 'out of the reviews.']]] },
+    { id: 'explore', y: 476, name: '03 · Exploring Stories', url: 'explore.html', open: 'Open Explore →',
+      pts: [[178, 300], [232, 333], [300, 404], [366, 458], [462, 472], [560, 477], [650, 479], [750, 484], [845, 489]],
+      stops: [['Start from a mood', ['How you feel tonight,', 'not a country.']], ['Notes on culture', ['Yuánfèn and miànzi,', 'explained where a', "subtitle can't."]]] }
+  ],
+};
+</script>
+<script src="../../assets/carriage/carriage.js"></script>
 </body>
 </html>
